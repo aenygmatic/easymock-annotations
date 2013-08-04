@@ -32,10 +32,23 @@ public class EasyMockAnnotations {
     private static MockInjector MOCK_INJECTOR = new MockInjector();
 
     /**
-     * Initialize the test class.
+     * Initialize the test class. The mocks are created by {@link IMocksControl}.
+     * Initialize all field annotated with {@link Mock @Mock}. The mock are under the conrol of the returned
+     * {@code IMocksControl}.
+     * When a field is annotated with {@link MockControl @MockControl} the control will be injected to the field.
+     * All the mocks are injected to field annotated with {@link Injected @Injected}. When the
+     * {@code Injected @Injected} field is not initalized a new instance will be created if it has default constructor.
+     * <p>
+     * Usage:
+     * <pre>
+     *     &#064;Before
+     *     public void setUp() {
+     *         IMocksControl control = EasyMockAnnotations.initializeWithMockControl(this);
+     *     }
+     * </pre>
      *
-     * @param testclass
-     * @return
+     * @param testclass the testclass
+     * @return the {@code IMocksControl}
      */
     public static IMocksControl initializeWithMockControl(Object testclass) {
         IMocksControl control = EasyMock.createControl();
@@ -47,8 +60,21 @@ public class EasyMockAnnotations {
     }
 
     /**
+     * Initialize the test class. The mocks are created by EasyMock (equals to {@code EasyMock.createMock(Class)}) or if
+     * the testclass is an instance of {@link EasyMockSupport} (equals to {@code createMock(class)}).
+     * Initialize all field annotated with {@link Mock @Mock}.
+     * All the mocks are injected to field annotated with {@link Injected @Injected}. When the
+     * {@code Injected @Injected} field is not initalized a new instance will be created if it has default constructor.
+     * <p>
+     * Usage:
+     * <pre>
+     *     &#064;Before
+     *     public void setUp() {
+     *         EasyMockAnnotations.initialize(this);
+     *     }
+     * </pre>
      *
-     * @param testclass
+     * @param testclass the testclass
      */
     public static void initialize(Object testclass) {
         MockFactory mockFactory;

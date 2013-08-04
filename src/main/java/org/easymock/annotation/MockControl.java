@@ -6,6 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Fields annotated with {@code @MockControl} will be filled up with {@link org.easymock.IMocksControl IMocksControl}
+ * object after the testclass is initialized by {@link EasyMockAnnotations#initializeWithMockControl(Object)}.
  *
  * @author Balazs Berkes
  */
