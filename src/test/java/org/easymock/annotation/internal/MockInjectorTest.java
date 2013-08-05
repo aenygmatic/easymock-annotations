@@ -23,10 +23,11 @@ public class MockInjectorTest {
     private SubClass subClass;
     private SubSubClass subSubClass;
     private Set<MockHolder> mocks;
-    /* Object to be injected */
+    /* Objects to be injected */
     private TestedClassWithAllUniqueField classUniqueTypeField;
     private TestedClassWithFieldsOfSameType classUniqueNamedFields;
     private TestedClassWithFieldsOfSameTypeLowCaseOnly classUniqueLowCaseNamedFields;
+
     private MockInjector underTest;
 
     @Before
