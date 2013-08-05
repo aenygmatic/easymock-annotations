@@ -10,6 +10,7 @@ import java.util.Set;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.easymock.IMocksControl;
+import org.easymock.MockType;
 
 import org.easymock.annotation.exception.EasyMockAnnotationInitializationException;
 import org.easymock.annotation.exception.EasyMockAnnotationReflectionException;
@@ -51,8 +52,7 @@ public class EasyMockAnnotations {
      * @return the {@code IMocksControl}
      */
     public static IMocksControl initializeWithMockControl(Object testclass) {
-        IMocksControl control = EasyMock.createControl();
-        injectMockControl(testclass, control);
+        IMocksControl control = injectMockControl(testclass);
         Set<MockHolder> mocks = processEasyMockAnnotations(testclass, new ControlledMockFactory(control));
         Object testedObject = initializeTestedClass(testclass);
         injectToTestedClass(testedObject, mocks);
@@ -95,10 +95,12 @@ public class EasyMockAnnotations {
         return testclass.getClass();
     }
 
-    private static void injectMockControl(Object testclass, IMocksControl control) {
+    private static IMocksControl injectMockControl(Object testclass) {
+        IMocksControl control = null;
         for (Field field : testclass.getClass().getDeclaredFields()) {
             MockControl annotation = field.getAnnotation(MockControl.class);
             if (annotation != null) {
+                control = createControl(annotation.value());
                 try {
                     setField(field, testclass, control);
                 } catch (EasyMockAnnotationReflectionException ex) {
@@ -106,6 +108,10 @@ public class EasyMockAnnotations {
                 }
             }
         }
+        if (control == null) {
+            control = EasyMock.createControl();
+        }
+        return control;
     }
 
     private static Object initializeTestedClass(Object testclass) {
@@ -122,7 +128,7 @@ public class EasyMockAnnotations {
         return testedClass;
     }
 
-    private static Set<MockHolder> processEasyMockAnnotations(Object testclass, MockFactory mockFactory) throws EasyMockAnnotationInitializationException {
+    private static Set<MockHolder> processEasyMockAnnotations(Object testclass, MockFactory mockFactory) {
         Class<? extends Object> clazz = getClassOfTest(testclass);
         Set<MockHolder> mocks = new HashSet<MockHolder>();
 
@@ -130,7 +136,7 @@ public class EasyMockAnnotations {
             Mock annotation = field.getAnnotation(Mock.class);
             if (annotation != null) {
                 Class<?> typeOfField = field.getType();
-                Object mockedObject = mockFactory.createMock(typeOfField);
+                Object mockedObject = mockFactory.createMock(typeOfField, annotation.value());
                 MockHolder mock = createMock(mockedObject, field);
                 mocks.add(mock);
                 setField(field, testclass, mockedObject);
@@ -139,7 +145,7 @@ public class EasyMockAnnotations {
         return mocks;
     }
 
-    private static void injectToTestedClass(Object testedObject, Set< MockHolder> mocks) {
+    private static void injectToTestedClass(Object testedObject, Set<MockHolder> mocks) {
         MOCK_INJECTOR.injectMocks(mocks).injectTo(testedObject);
     }
 
@@ -157,5 +163,23 @@ public class EasyMockAnnotations {
             setField(field, testclass, testedClass);
         }
         return testedClass;
+    }
+
+    private static IMocksControl createControl(MockType value) {
+        IMocksControl control = null;
+        switch (value) {
+            case NICE:
+                control = EasyMock.createNiceControl();
+                break;
+            case STRICT:
+                control = EasyMock.createStrictControl();
+                break;
+            case DEFAULT:
+                control = EasyMock.createControl();
+        }
+        return control;
+    }
+
+    private EasyMockAnnotations() {
     }
 }

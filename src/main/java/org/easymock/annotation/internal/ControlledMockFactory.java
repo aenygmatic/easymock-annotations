@@ -5,6 +5,7 @@
 package org.easymock.annotation.internal;
 
 import org.easymock.IMocksControl;
+import org.easymock.MockType;
 
 /**
  *
@@ -20,8 +21,15 @@ public class ControlledMockFactory implements MockFactory {
         this.control = control;
     }
 
+    /**
+     * Created a mock object of the given class.
+     *
+     * @param clazz type of the mock
+     * @param type {@link MockType} will be ignored
+     * @return returns a mocked object.
+     */
     @Override
-    public Object createMock(Class<?> clazz) {
+    public Object createMock(Class<?> clazz, MockType type) {
         return control.createMock(clazz);
     }
 }

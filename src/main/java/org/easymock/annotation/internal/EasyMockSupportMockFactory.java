@@ -4,7 +4,12 @@
  */
 package org.easymock.annotation.internal;
 
+import static org.easymock.MockType.DEFAULT;
+import static org.easymock.MockType.NICE;
+import static org.easymock.MockType.STRICT;
+
 import org.easymock.EasyMockSupport;
+import org.easymock.MockType;
 
 /**
  *
@@ -21,7 +26,19 @@ public class EasyMockSupportMockFactory implements MockFactory {
     }
 
     @Override
-    public Object createMock(Class<?> clazz) {
-        return easyMockSupport.createMock(clazz);
+    public Object createMock(Class<?> clazz, MockType type) {
+        Object mock = null;
+        switch (type) {
+            case NICE:
+                mock = easyMockSupport.createNiceControl();
+                break;
+            case STRICT:
+                mock = easyMockSupport.createStrictControl();
+                break;
+            case DEFAULT:
+                mock = easyMockSupport.createControl();
+                break;
+        }
+        return mock;
     }
 }

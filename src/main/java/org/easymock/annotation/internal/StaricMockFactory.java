@@ -1,6 +1,11 @@
 package org.easymock.annotation.internal;
 
+import static org.easymock.MockType.DEFAULT;
+import static org.easymock.MockType.NICE;
+import static org.easymock.MockType.STRICT;
+
 import org.easymock.EasyMock;
+import org.easymock.MockType;
 
 /**
  *
@@ -11,7 +16,19 @@ import org.easymock.EasyMock;
 public class StaricMockFactory implements MockFactory {
 
     @Override
-    public Object createMock(Class<?> clazz) {
-        return EasyMock.createMock(clazz);
+    public Object createMock(Class<?> clazz, MockType type) {
+        Object mock = null;
+        switch (type) {
+            case NICE:
+                mock = EasyMock.createNiceMock(clazz);
+                break;
+            case STRICT:
+                mock = EasyMock.createStrictMock(clazz);
+                break;
+            case DEFAULT:
+                mock = EasyMock.createMock(clazz);
+                break;
+        }
+        return mock;
     }
 }
