@@ -53,11 +53,11 @@ public class ClassInitializer {
         return this;
     }
 
-    private Constructor findDefaultConstructor(Constructor[] ctors) {
+    private Constructor findDefaultConstructor(Constructor[] constructors) {
         Constructor ctor = null;
-        for (int i = 0; i < ctors.length; i++) {
-            ctor = ctors[i];
-            if (ctor.getGenericParameterTypes().length == 0) {
+        for (Constructor c : constructors) {
+            if (c.getGenericParameterTypes().length == 0) {
+                ctor = c;
                 break;
             }
         }

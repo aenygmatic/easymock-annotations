@@ -11,6 +11,7 @@ import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.easymock.IMocksControl;
 import org.easymock.MockType;
+import org.easymock.TestSubject;
 
 import org.easymock.annotation.exception.EasyMockAnnotationInitializationException;
 import org.easymock.annotation.exception.EasyMockAnnotationReflectionException;
@@ -30,12 +31,13 @@ import org.easymock.annotation.internal.StaricMockFactory;
  */
 public class EasyMockAnnotations {
 
-    private static MockInjector MOCK_INJECTOR = new MockInjector();
+    private static final MockInjector MOCK_INJECTOR = new MockInjector();
 
     /**
      * Initialize the test class. The mocks are created by {@link IMocksControl}.
      * Initialize all field annotated with {@link Mock @Mock}. The mock are under the conrol of the returned
      * {@code IMocksControl}.
+     * <p>
      * When a field is annotated with {@link MockControl @MockControl} the control will be injected to the field.
      * All the mocks are injected to field annotated with {@link Injected @Injected}. When the
      * {@code Injected @Injected} field is not initalized a new instance will be created if it has default constructor.
@@ -55,7 +57,9 @@ public class EasyMockAnnotations {
         IMocksControl control = injectMockControl(testclass);
         Set<MockHolder> mocks = processEasyMockAnnotations(testclass, new ControlledMockFactory(control));
         Object testedObject = initializeTestedClass(testclass);
-        injectToTestedClass(testedObject, mocks);
+        if (testedObject != null) {
+            injectToTestedClass(testedObject, mocks);
+        }
         return control;
     }
 
@@ -63,6 +67,7 @@ public class EasyMockAnnotations {
      * Initialize the test class. The mocks are created by EasyMock (equals to {@code EasyMock.createMock(Class)}) or if
      * the testclass is an instance of {@link EasyMockSupport} (equals to {@code createMock(class)}).
      * Initialize all field annotated with {@link Mock @Mock}.
+     * <p>
      * All the mocks are injected to field annotated with {@link Injected @Injected}. When the
      * {@code Injected @Injected} field is not initalized a new instance will be created if it has default constructor.
      * <p>
@@ -85,7 +90,9 @@ public class EasyMockAnnotations {
         }
         Set<MockHolder> mocks = processEasyMockAnnotations(testclass, mockFactory);
         Object testedObject = initializeTestedClass(testclass);
-        injectToTestedClass(testedObject, mocks);
+        if (testedObject != null) {
+            injectToTestedClass(testedObject, mocks);
+        }
     }
 
     private static Class<? extends Object> getClassOfTest(Object testclass) throws RuntimeException {
@@ -116,13 +123,21 @@ public class EasyMockAnnotations {
 
     private static Object initializeTestedClass(Object testclass) {
         Object testedClass = null;
+        boolean annotationFound = false;
         for (Field field : testclass.getClass().getDeclaredFields()) {
             Injected annotation = field.getAnnotation(Injected.class);
             if (annotation != null) {
+                annotationFound = true;
                 testedClass = createInstanceIfNull(field, testclass);
+            } else {
+                TestSubject testSubject = field.getAnnotation(TestSubject.class);
+                if (testSubject != null) {
+                    annotationFound = true;
+                    testedClass = createInstanceIfNull(field, testclass);
+                }
             }
         }
-        if (testedClass == null) {
+        if (annotationFound && testedClass == null) {
             throw new EasyMockAnnotationInitializationException("Failed to initilize class under test");
         }
         return testedClass;
@@ -140,6 +155,15 @@ public class EasyMockAnnotations {
                 MockHolder mock = createMock(mockedObject, field);
                 mocks.add(mock);
                 setField(field, testclass, mockedObject);
+            } else {
+                org.easymock.Mock easyMockAnnotation = field.getAnnotation(org.easymock.Mock.class);
+                if (easyMockAnnotation != null) {
+                    Class<?> typeOfField = field.getType();
+                    Object mockedObject = mockFactory.createMock(typeOfField, easyMockAnnotation.type());
+                    MockHolder mock = createMock(mockedObject, field);
+                    mocks.add(mock);
+                    setField(field, testclass, mockedObject);
+                }
             }
         }
         return mocks;
