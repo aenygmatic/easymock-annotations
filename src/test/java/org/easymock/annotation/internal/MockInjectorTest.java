@@ -21,12 +21,14 @@ public class MockInjectorTest {
     private SuperClass anotherSuperClass;
     private Clazz clazz;
     private SubClass subClass;
-    private SubSubClass subSubClass;
-    private Set<MockHolder> mocks;
+    private HashSet<String> set;
     /* Objects to be injected */
     private TestedClassWithAllUniqueField classUniqueTypeField;
     private TestedClassWithFieldsOfSameType classUniqueNamedFields;
     private TestedClassWithFieldsOfSameTypeLowCaseOnly classUniqueLowCaseNamedFields;
+    private TestedClassWithInterfaceField classWithInterfaceField;
+
+    private Set<MockHolder> mocks;
 
     private MockInjector underTest;
 
@@ -37,13 +39,13 @@ public class MockInjectorTest {
         anotherSuperClass = new SuperClass();
         clazz = new Clazz();
         subClass = new SubClass();
-        subSubClass = new SubSubClass();
+        set = new HashSet<String>();
     }
 
     @Test
     public void testInjectMocksWhenAllFieldHasUniqueType() {
         //GIVEN
-        givenMocks(superClass, clazz, subClass, subSubClass);
+        givenMocks(superClass, clazz, subClass);
         givenClassWithUniqueTypeFields();
         //WHEN
         underTest.injectTo(classUniqueTypeField);
@@ -73,6 +75,18 @@ public class MockInjectorTest {
         assertFieldsInjectedByLowerCaseName();
     }
 
+    @Test
+    public void testInjectMocksWhenFieldIsInterfaceShouldInjectImplementation() {
+        //GIVEN
+        givenMocks(set);
+        givenTestedClassWithInterfaceField();
+        //WHEN
+        underTest.injectTo(classWithInterfaceField);
+        //THEN
+        assertInterfaceImplIsInjected();
+
+    }
+
     private void givenMocks(Object... mocks) {
         this.mocks = new HashSet<MockHolder>();
         for (Object mock : mocks) {
@@ -85,23 +99,30 @@ public class MockInjectorTest {
         underTest.injectMocks(this.mocks);
     }
 
+    private void givenTestedClassWithInterfaceField() {
+        classWithInterfaceField = new TestedClassWithInterfaceField();
+    }
+
     private void givenClassWithUniqueTypeFields() {
-        classUniqueTypeField = new TestedClassWithAllUniqueField(superClass, clazz, subClass, subSubClass);
+        classUniqueTypeField = new TestedClassWithAllUniqueField();
     }
 
     private void assertFieldsAreInjectedByType() {
         assertEquals(superClass, classUniqueTypeField.superClass);
         assertEquals(clazz, classUniqueTypeField.clazz);
         assertEquals(subClass, classUniqueTypeField.subClass);
-        assertEquals(subSubClass, classUniqueTypeField.subSubClass);
     }
 
     private void givenClassWithUniqueNamedFieldsOfSameType() {
-        classUniqueNamedFields = new TestedClassWithFieldsOfSameType(superClass, anotherSuperClass);
+        classUniqueNamedFields = new TestedClassWithFieldsOfSameType();
     }
 
     private void givenClassWithUniqueLowerCaseNamedFieldsOfSameType() {
-        classUniqueLowCaseNamedFields = new TestedClassWithFieldsOfSameTypeLowCaseOnly(superClass, anotherSuperClass);
+        classUniqueLowCaseNamedFields = new TestedClassWithFieldsOfSameTypeLowCaseOnly();
+    }
+
+    private void assertInterfaceImplIsInjected() {
+        assertEquals(set, classWithInterfaceField.strings);
     }
 
     private void assertFieldsInjectedByName() {
@@ -136,43 +157,27 @@ public class MockInjectorTest {
     class SubClass extends Clazz {
     }
 
-    class SubSubClass extends SubClass {
-    }
-
     class TestedClassWithAllUniqueField {
 
         public SuperClass superClass;
         public Clazz clazz;
         public SubClass subClass;
-        public SubSubClass subSubClass;
-
-        TestedClassWithAllUniqueField(SuperClass superClass, Clazz clazz, SubClass subClass, SubSubClass subSubClass) {
-            this.superClass = superClass;
-            this.clazz = clazz;
-            this.subClass = subClass;
-            this.subSubClass = subSubClass;
-        }
     }
 
     class TestedClassWithFieldsOfSameType {
 
         public SuperClass superClass;
         public SuperClass anotherSuperClass;
-
-        TestedClassWithFieldsOfSameType(SuperClass superClass, SuperClass anotherSuperClass) {
-            this.superClass = superClass;
-            this.anotherSuperClass = anotherSuperClass;
-        }
     }
 
     class TestedClassWithFieldsOfSameTypeLowCaseOnly {
 
         public SuperClass superclass;
         public SuperClass anothersuperclass;
+    }
 
-        TestedClassWithFieldsOfSameTypeLowCaseOnly(SuperClass superClass, SuperClass anotherSuperClass) {
-            this.superclass = superClass;
-            this.anothersuperclass = anotherSuperClass;
-        }
+    class TestedClassWithInterfaceField {
+
+        public Set<String> strings;
     }
 }
