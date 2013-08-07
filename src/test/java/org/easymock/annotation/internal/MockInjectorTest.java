@@ -27,6 +27,7 @@ public class MockInjectorTest {
     private TestedClassWithFieldsOfSameType classUniqueNamedFields;
     private TestedClassWithFieldsOfSameTypeLowCaseOnly classUniqueLowCaseNamedFields;
     private TestedClassWithInterfaceField classWithInterfaceField;
+    private TestedClassWithInheritedFields classWithInheritedFields;
 
     private Set<MockHolder> mocks;
 
@@ -87,6 +88,18 @@ public class MockInjectorTest {
 
     }
 
+    @Test
+    public void testInjectMocksShouldInjectInheritedFields() {
+        //GIVEN
+        givenMocks(superClass, clazz, subClass);
+        givenTestedClassWithInherite4dFields();
+        //WHEN
+        underTest.injectTo(classWithInheritedFields);
+        //THEN
+        assertInheritedFieldsAreInjected();
+
+    }
+
     private void givenMocks(Object... mocks) {
         this.mocks = new HashSet<MockHolder>();
         for (Object mock : mocks) {
@@ -103,14 +116,24 @@ public class MockInjectorTest {
         classWithInterfaceField = new TestedClassWithInterfaceField();
     }
 
-    private void givenClassWithUniqueTypeFields() {
-        classUniqueTypeField = new TestedClassWithAllUniqueField();
+    private void givenTestedClassWithInherite4dFields() {
+        classWithInheritedFields = new TestedClassWithInheritedFields();
+    }
+
+    private void assertInheritedFieldsAreInjected() {
+        assertEquals(superClass, classWithInheritedFields.superClass);
+        assertEquals(clazz, classWithInheritedFields.clazz);
+        assertEquals(subClass, classWithInheritedFields.subClass);
     }
 
     private void assertFieldsAreInjectedByType() {
         assertEquals(superClass, classUniqueTypeField.superClass);
         assertEquals(clazz, classUniqueTypeField.clazz);
         assertEquals(subClass, classUniqueTypeField.subClass);
+    }
+
+    private void givenClassWithUniqueTypeFields() {
+        classUniqueTypeField = new TestedClassWithAllUniqueField();
     }
 
     private void givenClassWithUniqueNamedFieldsOfSameType() {
@@ -162,6 +185,9 @@ public class MockInjectorTest {
         public SuperClass superClass;
         public Clazz clazz;
         public SubClass subClass;
+    }
+
+    class TestedClassWithInheritedFields extends TestedClassWithAllUniqueField {
     }
 
     class TestedClassWithFieldsOfSameType {

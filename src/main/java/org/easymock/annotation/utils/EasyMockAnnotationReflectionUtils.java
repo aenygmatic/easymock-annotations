@@ -8,6 +8,9 @@ import static java.lang.reflect.Modifier.isFinal;
 import static java.lang.reflect.Modifier.isStatic;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.easymock.annotation.exception.EasyMockAnnotationReflectionException;
 
@@ -83,6 +86,24 @@ public final class EasyMockAnnotationReflectionUtils {
             }
         }
         return distance;
+    }
+
+    /**
+     * Scans for the class and all its predecessors (up to {@code Object}) for fields.
+     * <p>
+     * @param clazz first level class to scan
+     * @return {@code List<Field>} of the class and all it predecessors
+     */
+    public static List<Field> getAllFields(Class<?> clazz) {
+        List<Field> fields = new LinkedList<Field>();
+        Class<?> predecessor = clazz;
+
+        while (!predecessor.equals(Object.class)) {
+            fields.addAll(Arrays.asList(predecessor.getDeclaredFields()));
+            predecessor = predecessor.getSuperclass();
+        }
+
+        return fields;
     }
 
     private EasyMockAnnotationReflectionUtils() {

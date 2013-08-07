@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package integrationtest.support;
 
 import java.util.List;
@@ -9,7 +5,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- *
+ * Dummy class for support integration testing.
+ * <p>
  * @author Balazs Berkes
  */
 public class ComponentWithGenericFields {

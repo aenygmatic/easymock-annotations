@@ -16,8 +16,8 @@ import org.easymock.MockType;
 public class StaricMockFactory implements MockFactory {
 
     @Override
-    public Object createMock(Class<?> clazz, MockType type) {
-        Object mock = null;
+    public <T> T createMock(Class<T> clazz, MockType type) {
+        T mock;
         switch (type) {
             case NICE:
                 mock = EasyMock.createNiceMock(clazz);
@@ -26,6 +26,9 @@ public class StaricMockFactory implements MockFactory {
                 mock = EasyMock.createStrictMock(clazz);
                 break;
             case DEFAULT:
+                mock = EasyMock.createMock(clazz);
+                break;
+            default:
                 mock = EasyMock.createMock(clazz);
                 break;
         }

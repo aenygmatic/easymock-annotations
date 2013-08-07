@@ -19,24 +19,27 @@ import org.easymock.MockType;
  */
 public class EasyMockSupportMockFactory implements MockFactory {
 
-    private EasyMockSupport easyMockSupport;
+    private final EasyMockSupport easyMockSupport;
 
     public EasyMockSupportMockFactory(EasyMockSupport easyMockSupport) {
         this.easyMockSupport = easyMockSupport;
     }
 
     @Override
-    public Object createMock(Class<?> clazz, MockType type) {
-        Object mock = null;
+    public <T> T createMock(Class<T> clazz, MockType type) {
+        T mock;
         switch (type) {
             case NICE:
-                mock = easyMockSupport.createNiceControl();
+                mock = easyMockSupport.createNiceMock(clazz);
                 break;
             case STRICT:
-                mock = easyMockSupport.createStrictControl();
+                mock = easyMockSupport.createStrictMock(clazz);
                 break;
             case DEFAULT:
-                mock = easyMockSupport.createControl();
+                mock = easyMockSupport.createMock(clazz);
+                break;
+            default:
+                mock = easyMockSupport.createMock(clazz);
                 break;
         }
         return mock;

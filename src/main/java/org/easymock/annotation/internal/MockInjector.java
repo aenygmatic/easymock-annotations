@@ -1,5 +1,6 @@
 package org.easymock.annotation.internal;
 
+import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getAllFields;
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getInheritanceDistance;
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.setField;
 
@@ -17,7 +18,8 @@ import java.util.Set;
  */
 public class MockInjector {
 
-    public static final int MAX_DEPTH = Integer.MAX_VALUE;
+    private static final int MAX_DEPTH = Integer.MAX_VALUE;
+
     private Set<MockHolder> mocks;
 
     /**
@@ -38,7 +40,7 @@ public class MockInjector {
      * @return the target object
      */
     public Object injectTo(Object target) {
-        for (Field field : target.getClass().getDeclaredFields()) {
+        for (Field field : getAllFields(target.getClass())) {
             Class<?> type = field.getType();
             String targetFieldName = field.getName();
             final List<MockHolder> closestMocks = getClosestMocks(type);
@@ -50,18 +52,18 @@ public class MockInjector {
 
     private List<MockHolder> getClosestMocks(Class<?> type) {
         List<MockHolder> closestMocks = new ArrayList<MockHolder>();
-        int inheritanceDistance = MAX_DEPTH;
+        int closestDist = MAX_DEPTH;
         for (MockHolder mock : mocks) {
-            int dist = getInheritanceDistance(mock.getMock(), type);
-            if (dist != -1 && dist < inheritanceDistance) {
-                inheritanceDistance = dist;
+            final int currentDist = getInheritanceDistance(mock.getMock(), type);
+            if (isInstance(currentDist) && isCloserThanCurrent(currentDist, closestDist)) {
+                closestDist = currentDist;
                 closestMocks.clear();
                 closestMocks.add(mock);
-            } else if (dist != -1 && dist == inheritanceDistance) {
+            } else if (isInstance(currentDist) && isCloseAsCurrent(currentDist, closestDist)) {
                 closestMocks.add(mock);
             }
         }
-        if (inheritanceDistance == MAX_DEPTH) {
+        if (closestDist == MAX_DEPTH) {
             closestMocks = Collections.EMPTY_LIST;
         }
         return closestMocks;
@@ -91,5 +93,17 @@ public class MockInjector {
             matchingMock = mocks.get(0).getMock();
         }
         return matchingMock;
+    }
+
+    private boolean isInstance(final int dist) {
+        return dist != -1;
+    }
+
+    private boolean isCloserThanCurrent(final int dist, int inheritanceDistance) {
+        return dist < inheritanceDistance;
+    }
+
+    private boolean isCloseAsCurrent(final int dist, int inheritanceDistance) {
+        return dist == inheritanceDistance;
     }
 }

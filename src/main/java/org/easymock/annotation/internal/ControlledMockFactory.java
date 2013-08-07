@@ -15,7 +15,7 @@ import org.easymock.MockType;
  */
 public class ControlledMockFactory implements MockFactory {
 
-    private IMocksControl control;
+    private final IMocksControl control;
 
     public ControlledMockFactory(IMocksControl control) {
         this.control = control;
@@ -29,7 +29,7 @@ public class ControlledMockFactory implements MockFactory {
      * @return returns a mocked object.
      */
     @Override
-    public Object createMock(Class<?> clazz, MockType type) {
+    public <T> T createMock(Class<T> clazz, MockType type) {
         return control.createMock(clazz);
     }
 }

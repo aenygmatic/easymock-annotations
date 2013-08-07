@@ -1,5 +1,6 @@
 package org.easymock.annotation;
 
+import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getAllFields;
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getField;
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.setField;
 
@@ -146,8 +147,7 @@ public class EasyMockAnnotations {
     private static Set<MockHolder> processEasyMockAnnotations(Object testclass, MockFactory mockFactory) {
         Class<? extends Object> clazz = getClassOfTest(testclass);
         Set<MockHolder> mocks = new HashSet<MockHolder>();
-
-        for (Field field : clazz.getDeclaredFields()) {
+        for (Field field : getAllFields(clazz)) {
             Mock annotation = field.getAnnotation(Mock.class);
             if (annotation != null) {
                 Class<?> typeOfField = field.getType();

@@ -1,12 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package integrationtest.support;
 
 /**
- *
+ * Dummy class for support integration testing.
+ * <p>
  * @author Balazs Berkes
  */
 public class SecondLevelClassA extends FirstLevelClass {
+
+    private SecondLevelClassA secondField;
+
+    public SecondLevelClassA getSecondField() {
+        return secondField;
+    }
+
 }
