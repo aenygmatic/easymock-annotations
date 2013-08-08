@@ -71,7 +71,7 @@ public class MockInjector {
 
     private Object selectByName(String targetName, List<MockHolder> mocks) {
         Object matchingMock = null;
-        if (mocks.size() > 0) {
+        if (mocks.size() > 1) {
             for (MockHolder mock : mocks) {
                 final String sourceName = mock.getSourceName();
                 if (targetName.equals(sourceName)) {

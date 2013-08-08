@@ -26,8 +26,6 @@ public class StaricMockFactory implements MockFactory {
                 mock = EasyMock.createStrictMock(clazz);
                 break;
             case DEFAULT:
-                mock = EasyMock.createMock(clazz);
-                break;
             default:
                 mock = EasyMock.createMock(clazz);
                 break;

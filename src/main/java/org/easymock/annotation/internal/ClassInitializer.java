@@ -25,11 +25,11 @@ public class ClassInitializer {
      * @throws {@link EasyMockAnnotationInitializationException} when initailzation failed or no default constructor
      * found.
      */
-    public Object initialize(Class<?> clazz) {
+    public Object initialize(Class<?> clazz) throws EasyMockAnnotationInitializationException {
         Object testedObject = null;
         try {
-            Constructor[] ctors = clazz.getDeclaredConstructors();
-            Constructor constructor = findDefaultConstructor(ctors);
+            Constructor<?>[] ctors = clazz.getDeclaredConstructors();
+            Constructor<?> constructor = findDefaultConstructor(ctors);
             testedObject = constructor.newInstance();
         } catch (InstantiationException ex) {
             throw new EasyMockAnnotationInitializationException("Failed to initialized tested class!", ex);
@@ -53,9 +53,9 @@ public class ClassInitializer {
         return this;
     }
 
-    private Constructor findDefaultConstructor(Constructor[] constructors) {
-        Constructor ctor = null;
-        for (Constructor c : constructors) {
+    private Constructor<?> findDefaultConstructor(Constructor[] constructors) {
+        Constructor<?> ctor = null;
+        for (Constructor<?> c : constructors) {
             if (c.getGenericParameterTypes().length == 0) {
                 ctor = c;
                 break;

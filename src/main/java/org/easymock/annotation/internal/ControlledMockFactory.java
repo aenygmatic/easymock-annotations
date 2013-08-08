@@ -15,7 +15,7 @@ import org.easymock.MockType;
  */
 public class ControlledMockFactory implements MockFactory {
 
-    private final IMocksControl control;
+    private IMocksControl control;
 
     public ControlledMockFactory(IMocksControl control) {
         this.control = control;

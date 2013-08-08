@@ -36,8 +36,6 @@ public class EasyMockSupportMockFactory implements MockFactory {
                 mock = easyMockSupport.createStrictMock(clazz);
                 break;
             case DEFAULT:
-                mock = easyMockSupport.createMock(clazz);
-                break;
             default:
                 mock = easyMockSupport.createMock(clazz);
                 break;

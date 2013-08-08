@@ -22,7 +22,7 @@ public class MockHolder {
     }
 
     public String getSourceName() {
-        return sourceField.getName();
+        return sourceField == null ? "" : sourceField.getName();
     }
 
     public void setMock(Object mock) {
