@@ -8,7 +8,7 @@ Following annotations are supported.
 - @Mock (org.easymock.Mock is also supported)
   - Fields annotated with any of @Mock annotations the framework will create a mock object and inject into the field.
   - org.easymock.MockType is supported for both annotation
-  - mock names are NOT supported yet
+  - mock names are supported
   
 - @MockControl
   - Field annotated with @MockControl all the mock will be created by the IMockControl which will be injected into the field.
