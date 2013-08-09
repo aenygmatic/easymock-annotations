@@ -15,7 +15,7 @@ import org.easymock.MockType;
  */
 public class ControlledMockFactory implements MockFactory {
 
-    private IMocksControl control;
+    private final IMocksControl control;
 
     public ControlledMockFactory(IMocksControl control) {
         this.control = control;
@@ -31,5 +31,18 @@ public class ControlledMockFactory implements MockFactory {
     @Override
     public <T> T createMock(Class<T> clazz, MockType type) {
         return control.createMock(clazz);
+    }
+
+    /**
+     * Created a mock object of the given class.
+     *
+     * @param clazz type of the mock
+     * @param type {@link MockType} will be ignored
+     * @param name name of the mock
+     * @return returns a mocked object.
+     */
+    @Override
+    public <T> T createMock(Class<T> clazz, MockType type, String name) {
+        return control.createMock(name, clazz);
     }
 }

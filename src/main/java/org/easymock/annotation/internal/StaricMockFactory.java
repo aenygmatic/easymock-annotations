@@ -32,4 +32,22 @@ public class StaricMockFactory implements MockFactory {
         }
         return mock;
     }
+
+    @Override
+    public <T> T createMock(Class<T> clazz, MockType type, String name) {
+        T mock;
+        switch (type) {
+            case NICE:
+                mock = EasyMock.createNiceMock(name, clazz);
+                break;
+            case STRICT:
+                mock = EasyMock.createStrictMock(name, clazz);
+                break;
+            case DEFAULT:
+            default:
+                mock = EasyMock.createMock(name, clazz);
+                break;
+        }
+        return mock;
+    }
 }

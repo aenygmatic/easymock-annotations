@@ -42,4 +42,22 @@ public class EasyMockSupportMockFactory implements MockFactory {
         }
         return mock;
     }
+
+    @Override
+    public <T> T createMock(Class<T> clazz, MockType type, String name) {
+        T mock;
+        switch (type) {
+            case NICE:
+                mock = easyMockSupport.createNiceMock(name, clazz);
+                break;
+            case STRICT:
+                mock = easyMockSupport.createStrictMock(name, clazz);
+                break;
+            case DEFAULT:
+            default:
+                mock = easyMockSupport.createMock(name, clazz);
+                break;
+        }
+        return mock;
+    }
 }
