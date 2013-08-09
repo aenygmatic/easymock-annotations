@@ -24,6 +24,8 @@ import org.easymock.annotation.Mock;
  */
 public class ControlledMockFactoryTest {
 
+    private static final String MOCK_NAME = "mockname";
+
     @Mock
     private IMocksControl control;
     @Mock
@@ -40,11 +42,21 @@ public class ControlledMockFactoryTest {
     @Test
     public void testCreateMockShouldCreateMockRegardlessOfType() {
         //GIVEN
-        MockType type = MockType.DEFAULT;
         expect(control.createMock(Thread.class)).andReturn(mock);
         replay(control);
         //WHEN
-        underTest.createMock(Thread.class, type);
+        underTest.createMock(Thread.class, MockType.DEFAULT);
+        //THEN
+        verify(control);
+    }
+
+    @Test
+    public void testCreateMockShouldCreateMockWithName() {
+        //GIVEN
+        expect(control.createMock(MOCK_NAME, Thread.class)).andReturn(mock);
+        replay(control);
+        //WHEN
+        underTest.createMock(Thread.class, MockType.DEFAULT, MOCK_NAME);
         //THEN
         verify(control);
     }

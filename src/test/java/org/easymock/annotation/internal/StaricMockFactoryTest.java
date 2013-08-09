@@ -8,7 +8,6 @@ package org.easymock.annotation.internal;
 import static org.junit.Assert.assertTrue;
 
 import org.easymock.MockType;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +18,8 @@ import org.junit.Test;
  */
 public class StaricMockFactoryTest {
 
+    private static final String MOCK_NAME = "mockname";
+
     private MockFactory underTest;
 
     @Before
@@ -26,12 +27,8 @@ public class StaricMockFactoryTest {
         underTest = new StaricMockFactory();
     }
 
-    @After
-    public void tearDown() {
-    }
-
     @Test
-    public void testCreateMockShouldCreateMockWithDefault() {
+    public void testCreateMockShouldCreateDefaultMock() {
         //GIVEN
         MockType type = MockType.DEFAULT;
         //WHEN
@@ -41,7 +38,7 @@ public class StaricMockFactoryTest {
     }
 
     @Test
-    public void testCreateMockShouldCreateMockWithNice() {
+    public void testCreateMockShouldCreateNiceMock() {
         //GIVEN
         MockType type = MockType.NICE;
         //WHEN
@@ -51,7 +48,7 @@ public class StaricMockFactoryTest {
     }
 
     @Test
-    public void testCreateMockShouldCreateMockWithStrict() {
+    public void testCreateMockShouldCreateStrictMock() {
         //GIVEN
         MockType type = MockType.STRICT;
         //WHEN
@@ -60,4 +57,33 @@ public class StaricMockFactoryTest {
         assertTrue(mock instanceof MockFactory);
     }
 
+    @Test
+    public void testCreateMockShouldCreateDefaultMockWithName() {
+        //GIVEN
+        MockType type = MockType.DEFAULT;
+        //WHEN
+        Object mock = underTest.createMock(MockFactory.class, type, MOCK_NAME);
+        //THEN
+        assertTrue(mock instanceof MockFactory);
+    }
+
+    @Test
+    public void testCreateMockShouldCreateNiceMockWithName() {
+        //GIVEN
+        MockType type = MockType.NICE;
+        //WHEN
+        Object mock = underTest.createMock(MockFactory.class, type, MOCK_NAME);
+        //THEN
+        assertTrue(mock instanceof MockFactory);
+    }
+
+    @Test
+    public void testCreateMockShouldCreateStrictMockWithName() {
+        //GIVEN
+        MockType type = MockType.STRICT;
+        //WHEN
+        Object mock = underTest.createMock(MockFactory.class, type, MOCK_NAME);
+        //THEN
+        assertTrue(mock instanceof MockFactory);
+    }
 }

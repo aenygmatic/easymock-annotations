@@ -19,6 +19,8 @@ import org.easymock.annotation.Mock;
  */
 public class EasyMockSupportMockFactoryTest {
 
+    private static final String MOCK_NAME = "mockname";
+
     @Mock
     private EasyMockSupport easyMockSupport;
     @Mock
@@ -35,11 +37,10 @@ public class EasyMockSupportMockFactoryTest {
     @Test
     public void testCreateMockShouldCreateMock() {
         //GIVEN
-        MockType type = MockType.DEFAULT;
         expect(easyMockSupport.createMock(Thread.class)).andReturn(mock);
         replay(easyMockSupport);
         //WHEN
-        underTest.createMock(Thread.class, type);
+        underTest.createMock(Thread.class, MockType.DEFAULT);
         //THEN
         verify(easyMockSupport);
     }
@@ -47,11 +48,10 @@ public class EasyMockSupportMockFactoryTest {
     @Test
     public void testCreateMockShouldCreateNiceMock() {
         //GIVEN
-        MockType type = MockType.NICE;
         expect(easyMockSupport.createNiceMock(Thread.class)).andReturn(mock);
         replay(easyMockSupport);
         //WHEN
-        underTest.createMock(Thread.class, type);
+        underTest.createMock(Thread.class, MockType.NICE);
         //THEN
         verify(easyMockSupport);
     }
@@ -59,11 +59,43 @@ public class EasyMockSupportMockFactoryTest {
     @Test
     public void testCreateMockShouldCreateStrictMock() {
         //GIVEN
-        MockType type = MockType.STRICT;
         expect(easyMockSupport.createStrictMock(Thread.class)).andReturn(mock);
         replay(easyMockSupport);
         //WHEN
-        underTest.createMock(Thread.class, type);
+        underTest.createMock(Thread.class, MockType.STRICT);
+        //THEN
+        verify(easyMockSupport);
+    }
+
+    @Test
+    public void testCreateMockShouldCreateMockWithName() {
+        //GIVEN
+        expect(easyMockSupport.createMock(MOCK_NAME, Thread.class)).andReturn(mock);
+        replay(easyMockSupport);
+        //WHEN
+        underTest.createMock(Thread.class, MockType.DEFAULT, MOCK_NAME);
+        //THEN
+        verify(easyMockSupport);
+    }
+
+    @Test
+    public void testCreateMockShouldCreateNiceMockWithName() {
+        //GIVEN
+        expect(easyMockSupport.createNiceMock(MOCK_NAME, Thread.class)).andReturn(mock);
+        replay(easyMockSupport);
+        //WHEN
+        underTest.createMock(Thread.class, MockType.NICE, MOCK_NAME);
+        //THEN
+        verify(easyMockSupport);
+    }
+
+    @Test
+    public void testCreateMockShouldCreateStrictMockWithName() {
+        //GIVEN
+        expect(easyMockSupport.createStrictMock(MOCK_NAME, Thread.class)).andReturn(mock);
+        replay(easyMockSupport);
+        //WHEN
+        underTest.createMock(Thread.class, MockType.STRICT, MOCK_NAME);
         //THEN
         verify(easyMockSupport);
     }

@@ -32,8 +32,6 @@ import org.easymock.annotation.internal.StaricMockFactory;
  */
 public class EasyMockAnnotations {
 
-    private static final MockInjector MOCK_INJECTOR = new MockInjector();
-
     /**
      * Initialize the test class. The mocks are created by {@link IMocksControl}.
      * Initialize all field annotated with {@link Mock @Mock}. The mock are under the conrol of the returned
@@ -150,18 +148,12 @@ public class EasyMockAnnotations {
         for (Field field : getAllFields(clazz)) {
             Mock annotation = field.getAnnotation(Mock.class);
             if (annotation != null) {
-                Class<?> typeOfField = field.getType();
-                Object mockedObject = mockFactory.createMock(typeOfField, annotation.value());
-                MockHolder mock = createMock(mockedObject, field);
-                mocks.add(mock);
+                Object mockedObject = mockIt(field, annotation.name(), annotation.value(), mockFactory, mocks);
                 setField(field, testclass, mockedObject);
             } else {
                 org.easymock.Mock easyMockAnnotation = field.getAnnotation(org.easymock.Mock.class);
                 if (easyMockAnnotation != null) {
-                    Class<?> typeOfField = field.getType();
-                    Object mockedObject = mockFactory.createMock(typeOfField, easyMockAnnotation.type());
-                    MockHolder mock = createMock(mockedObject, field);
-                    mocks.add(mock);
+                    Object mockedObject = mockIt(field, easyMockAnnotation.name(), easyMockAnnotation.type(), mockFactory, mocks);
                     setField(field, testclass, mockedObject);
                 }
             }
@@ -169,14 +161,34 @@ public class EasyMockAnnotations {
         return mocks;
     }
 
-    private static void injectToTestedClass(Object testedObject, Set<MockHolder> mocks) {
-        MOCK_INJECTOR.injectMocks(mocks).injectTo(testedObject);
+    private static Object mockIt(Field field, String name, MockType mockType, MockFactory mockFactory, Set<MockHolder> mocks) {
+        Object mockedObject;
+        Class<?> typeOfField = field.getType();
+        mockedObject = createMock(mockFactory, typeOfField, mockType, name);
+        MockHolder mock = createMockHolder(mockedObject, field, name);
+        mocks.add(mock);
+        return mockedObject;
     }
 
-    private static MockHolder createMock(Object mockedObject, Field field) {
+    private static Object createMock(MockFactory mockFactory, Class<?> typeOfField, MockType type, String name) {
+        Object mockedObject;
+        if (name.isEmpty()) {
+            mockedObject = mockFactory.createMock(typeOfField, type);
+        } else {
+            mockedObject = mockFactory.createMock(typeOfField, type, name);
+        }
+        return mockedObject;
+    }
+
+    private static void injectToTestedClass(Object testedObject, Set<MockHolder> mocks) {
+        new MockInjector().injectMocks(mocks).injectTo(testedObject);
+    }
+
+    private static MockHolder createMockHolder(Object mockedObject, Field field, String name) {
         MockHolder mock = new MockHolder();
         mock.setMock(mockedObject);
         mock.setSourceField(field);
+        mock.setName(name);
         return mock;
     }
 
@@ -190,7 +202,7 @@ public class EasyMockAnnotations {
     }
 
     private static IMocksControl createControl(MockType value) {
-        IMocksControl control = null;
+        IMocksControl control;
         switch (value) {
             case NICE:
                 control = EasyMock.createNiceControl();
@@ -199,6 +211,7 @@ public class EasyMockAnnotations {
                 control = EasyMock.createStrictControl();
                 break;
             case DEFAULT:
+            default:
                 control = EasyMock.createControl();
         }
         return control;

@@ -18,4 +18,15 @@ public interface MockFactory {
      * @return returns a mocked object.
      */
     <T> T createMock(Class<T> clazz, MockType type);
+
+    /**
+     * Created a mock object of the given class.
+     * <p>
+     * @param <T> type of class
+     * @param clazz type of the mock
+     * @param type {@link MockType} of the mock
+     * @param name name of the mock
+     * @return returns a mocked object.
+     */
+    <T> T createMock(Class<T> clazz, MockType type, String name);
 }
