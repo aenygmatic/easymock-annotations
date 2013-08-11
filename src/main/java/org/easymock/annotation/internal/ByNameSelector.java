@@ -1,20 +1,14 @@
-package org.easymock.annotation.internal;
-
-import java.util.Arrays;
-import java.util.List;
-
-/**
- * Selects the matching mock which has matching name decided by the given {@link SelectionStategy}.
+ * Selects the matching mock which has matching name decided by the given {@link SelectionStrategy}.
  * <p>
  * @author Balazs Berkes
  */
 public class ByNameSelector {
 
-    public static final SelectionStategy NAME_EQUALS_STRATEGY = new NameEqualsStrategy();
-    public static final SelectionStategy NAME_EQUALS_IGNORE_CASE_STRATEGY = new NameEqualsIgnoreCaseStrategy();
-    public static final SelectionStategy NAME_CONTAINS_STRATEGY = new NameContainsStrategy();
+    public static final SelectionStrategy NAME_EQUALS_STRATEGY = new NameEqualsStrategy();
+    public static final SelectionStrategy NAME_EQUALS_IGNORE_CASE_STRATEGY = new NameEqualsIgnoreCaseStrategy();
+    public static final SelectionStrategy NAME_CONTAINS_STRATEGY = new NameContainsStrategy();
 
-    private List<SelectionStategy> strategy = Arrays.asList(NAME_EQUALS_STRATEGY, NAME_EQUALS_IGNORE_CASE_STRATEGY, NAME_CONTAINS_STRATEGY);
+    private List<SelectionStrategy> strategy = Arrays.asList(NAME_EQUALS_STRATEGY, NAME_EQUALS_IGNORE_CASE_STRATEGY, NAME_CONTAINS_STRATEGY);
 
     /**
      * Select the matching mock from the given mocks according to the selection strategy.
@@ -28,7 +22,7 @@ public class ByNameSelector {
      * <p>
      * @param targetName name of the field the mock will be injected
      * @param mocks list of {@link MockHolder} of the possible mock objects
-     * @return return the matching mock if it matches according to the {@link SelectionStategy SelectionStategies}. If
+     * @return return the matching mock if it matches according to the {@link SelectionStrategy SelectionStategies}. If
      * not match the first element of the list will be returned. If the given list is empty or
      * {@code null} {@link MockHolder#emptyMock()} will be returned.
      */
@@ -50,14 +44,14 @@ public class ByNameSelector {
         return matchingMock;
     }
 
-    public ByNameSelector overrideStategy(SelectionStategy... stategies) {
+    public ByNameSelector overrideStategy(SelectionStrategy... stategies) {
         strategy = Arrays.asList(stategies);
         return this;
     }
 
     private int getPriorityLevel(String targetName, MockHolder mock) {
         int currentPrio = 0;
-        for (SelectionStategy stategy : strategy) {
+        for (SelectionStrategy stategy : strategy) {
             if (stategy.isMatching(targetName, mock.getSourceName())) {
                 break;
             }
@@ -80,7 +74,7 @@ public class ByNameSelector {
         return list != null && !list.isEmpty();
     }
 
-    public static interface SelectionStategy {
+    public static interface SelectionStrategy {
 
         /**
          * Determines that the target fields name matched to the source field name are acceptible to its rule.
@@ -92,7 +86,7 @@ public class ByNameSelector {
         boolean isMatching(String targetName, String mockSourceName);
     }
 
-    public static class NameEqualsStrategy implements SelectionStategy {
+    public static class NameEqualsStrategy implements SelectionStrategy {
 
         @Override
         public boolean isMatching(String targetName, String mockSourceName) {
@@ -100,7 +94,7 @@ public class ByNameSelector {
         }
     }
 
-    public static class NameEqualsIgnoreCaseStrategy implements SelectionStategy {
+    public static class NameEqualsIgnoreCaseStrategy implements SelectionStrategy {
 
         @Override
         public boolean isMatching(String targetName, String mockSourceName) {
@@ -108,7 +102,7 @@ public class ByNameSelector {
         }
     }
 
-    public static class NameContainsStrategy implements SelectionStategy {
+    public static class NameContainsStrategy implements SelectionStrategy {
 
         @Override
         public boolean isMatching(String targetName, String mockSourceName) {
