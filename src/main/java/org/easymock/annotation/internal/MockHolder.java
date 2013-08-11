@@ -9,9 +9,15 @@ import java.lang.reflect.Field;
  */
 public class MockHolder {
 
+    private static final MockHolder EMPTY_MOCKHOLDER = new MockHolder();
+
     private Field sourceField;
     private Object mock;
     private String name;
+
+    public static MockHolder emptyMock() {
+        return EMPTY_MOCKHOLDER;
+    }
 
     public void setSourceField(Field sourceField) {
         this.sourceField = sourceField;
@@ -39,5 +45,10 @@ public class MockHolder {
 
     public String getName() {
         return name == null ? "" : name;
+    }
+
+    @Override
+    public String toString() {
+        return "MockHolder{" + "sourceField=" + getSourceName() + ", mock=" + mock + ", name=" + name + '}';
     }
 }

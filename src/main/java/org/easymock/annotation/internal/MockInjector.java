@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.easymock.annotation.exception.EasyMockAnnotationReflectionException;
+
 /**
  * Injects the the given mocks into the target class. Mocks are injected by type and name.
  *
@@ -21,14 +23,15 @@ public class MockInjector {
     private static final int MAX_DEPTH = Integer.MAX_VALUE;
 
     private Set<MockHolder> mocks;
+    private ByNameSelector byNameSelector = new ByNameSelector();
 
     /**
      * Injects the given mock into the tested object.
      *
      * @param mocks mocks to inject
-     * @return instance of the {@code MockInjector}.
+     * @return instance of this {@code MockInjector}.
      */
-    public MockInjector injectMocks(Set<MockHolder> mocks) {
+    public MockInjector addMocks(Set<MockHolder> mocks) {
         this.mocks = new HashSet<MockHolder>(mocks);
         return this;
     }
@@ -41,13 +44,19 @@ public class MockInjector {
      */
     public Object injectTo(Object target) {
         for (Field field : getAllFields(target.getClass())) {
-            Class<?> type = field.getType();
-            String targetFieldName = field.getName();
-            final List<MockHolder> closestMocks = getClosestMocks(type);
-            Object closestMock = selectByName(targetFieldName, closestMocks);
-            setField(field, target, closestMock);
+            injectField(field, target);
         }
         return target;
+    }
+
+    private void injectField(Field field, Object target) throws EasyMockAnnotationReflectionException {
+        Class<?> type = field.getType();
+        List<MockHolder> closestMocks = getClosestMocks(type);
+        if (!closestMocks.isEmpty()) {
+            String targetFieldName = field.getName();
+            MockHolder matchingMock = byNameSelector.getMatchingMock(targetFieldName, closestMocks);
+            setField(field, target, matchingMock.getMock());
+        }
     }
 
     private List<MockHolder> getClosestMocks(Class<?> type) {
@@ -67,32 +76,6 @@ public class MockInjector {
             closestMocks = Collections.EMPTY_LIST;
         }
         return closestMocks;
-    }
-
-    private Object selectByName(String targetName, List<MockHolder> mocks) {
-        Object matchingMock = null;
-        if (mocks.size() > 1) {
-            for (MockHolder mock : mocks) {
-                final String sourceName = mock.getSourceName();
-                if (targetName.equals(sourceName)) {
-                    matchingMock = mock.getMock();
-                    break;
-                } else if (targetName.equalsIgnoreCase(sourceName)) {
-                    if (matchingMock == null) {
-                        matchingMock = mock.getMock();
-                    }
-                }
-            }
-        }
-        matchingMock = injectFirstWhenNoMatchByName(matchingMock, mocks);
-        return matchingMock;
-    }
-
-    private Object injectFirstWhenNoMatchByName(Object matchingMock, List<MockHolder> mocks) {
-        if (matchingMock == null && !mocks.isEmpty()) {
-            matchingMock = mocks.get(0).getMock();
-        }
-        return matchingMock;
     }
 
     private boolean isInstance(final int dist) {

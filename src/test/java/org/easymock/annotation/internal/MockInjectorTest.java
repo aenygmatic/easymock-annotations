@@ -109,7 +109,7 @@ public class MockInjectorTest {
             this.mocks.add(m);
         }
 
-        underTest.injectMocks(this.mocks);
+        underTest.addMocks(this.mocks);
     }
 
     private void givenTestedClassWithInterfaceField() {

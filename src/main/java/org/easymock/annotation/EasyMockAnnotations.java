@@ -181,7 +181,7 @@ public class EasyMockAnnotations {
     }
 
     private static void injectToTestedClass(Object testedObject, Set<MockHolder> mocks) {
-        new MockInjector().injectMocks(mocks).injectTo(testedObject);
+        new MockInjector().addMocks(mocks).injectTo(testedObject);
     }
 
     private static MockHolder createMockHolder(Object mockedObject, Field field, String name) {

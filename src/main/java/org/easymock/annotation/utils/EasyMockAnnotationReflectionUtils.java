@@ -23,28 +23,40 @@ public final class EasyMockAnnotationReflectionUtils {
 
     /**
      * Set the field of the target object with the given value.
-     *
+     * <p>
      * @param field field to set
      * @param target object with field to set
      * @param value value which will be used for the field
-     *
-     * @throws throws {@code EasyMockAnnotationReflectionException} when setting the
+     * <p>
+     * @throws EasyMockAnnotationReflectionException when setting the
      * field failed
      */
-    public static void setField(Field field, Object target, Object value) {
-        if (!isStatic(field.getModifiers()) && !isFinal(field.getModifiers())) {
-            field.setAccessible(true);
-            try {
-                field.set(target, value);
-            } catch (IllegalArgumentException ex) {
-                throw new EasyMockAnnotationReflectionException("Cannot set field", ex);
-            } catch (IllegalAccessException ex) {
-                throw new EasyMockAnnotationReflectionException("Cannot set field", ex);
+    public static void setField(Field field, Object target, Object value) throws EasyMockAnnotationReflectionException {
+        if (value != null) {
+            if (!isStatic(field.getModifiers()) && !isFinal(field.getModifiers())) {
+                field.setAccessible(true);
+                try {
+                    field.set(target, value);
+                } catch (IllegalArgumentException ex) {
+                    throw new EasyMockAnnotationReflectionException(String.format("Cannot set field '%s' in %s", field.getName(), target.getClass()), ex);
+                } catch (IllegalAccessException ex) {
+                    throw new EasyMockAnnotationReflectionException(String.format("Cannot set field '%s' in %s", field.getName(), target.getClass()), ex);
+                }
             }
         }
     }
 
-    public static Object getField(Field field, Object target) {
+    /**
+     * Get the value of the field in the given object.
+     * <p>
+     * @param field whiches value will be returned
+     * @param target the target object which contains the field
+     * @return the value of the field
+     * <p>
+     * @throws EasyMockAnnotationReflectionException when setting the
+     * field failed
+     */
+    public static Object getField(Field field, Object target) throws EasyMockAnnotationReflectionException {
         Object fieldValue = null;
         if (!isStatic(field.getModifiers()) && !isFinal(field.getModifiers())) {
             field.setAccessible(true);
