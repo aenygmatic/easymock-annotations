@@ -20,14 +20,14 @@ public @interface Mock {
     /**
      * Defines the type of mock {@link MockType}.
      * Default is {@link MockType#DEFAULT}.
-     *
+     * <p>
      * @return the type of the mock
      */
     MockType value() default MockType.DEFAULT;
 
     /**
      * Name of the mock.
-     *
+     * <p>
      * @return the name of the mock object.
      */
     String name() default "";

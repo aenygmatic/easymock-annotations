@@ -27,7 +27,7 @@ public class MockInjector {
 
     /**
      * Injects the given mock into the tested object.
-     *
+     * <p>
      * @param mocks mocks to inject
      * @return instance of this {@code MockInjector}.
      */
@@ -38,7 +38,7 @@ public class MockInjector {
 
     /**
      * Injects the previously given mock into the target object.
-     *
+     * <p>
      * @param target object to be injected
      * @return the target object
      */

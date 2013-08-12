@@ -8,7 +8,6 @@ import org.easymock.EasyMockSupport;
 import org.easymock.MockType;
 
 /**
- *
  * Creates mock via the given class which inherits from {@link EasyMockSupport}.
  *
  * @author Balazs Berkes

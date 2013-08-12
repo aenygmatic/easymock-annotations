@@ -20,9 +20,9 @@ public @interface MockControl {
     /**
      * Defines the type of mocks created by this control {@link MockType}.
      * Default is {@link MockType#DEFAULT}.
-     * </p>
+     * <p>
      * This setup of the {@code @Mock} annotation will be overriden by this setup if created by control.
-     *
+     * <p>
      * @return the type of the mock
      */
     MockType value() default MockType.DEFAULT;

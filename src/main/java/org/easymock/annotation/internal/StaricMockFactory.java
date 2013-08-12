@@ -8,7 +8,6 @@ import org.easymock.EasyMock;
 import org.easymock.MockType;
 
 /**
- *
  * Creates mock via EasyMock. This is equivalent to {@code  EasyMock.createMock(class)}
  *
  * @author Balazs Berkes

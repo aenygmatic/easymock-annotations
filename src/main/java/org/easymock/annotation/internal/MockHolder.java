@@ -3,7 +3,7 @@ package org.easymock.annotation.internal;
 import java.lang.reflect.Field;
 
 /**
- * Wrapper calss for a mock. It conatains the mock's name, the source field and the mock itself.
+ * Wrapper class for a mock. It conatains the mock's name, the source field and the mock itself.
  *
  * @author Balazs Berkes
  */

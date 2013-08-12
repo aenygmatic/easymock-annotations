@@ -18,11 +18,11 @@ public class ClassInitializer {
 
     /**
      * Initialize an instance of the given class if it has default construtor.
-     *
+     * <p>
      * @param clazz class to be initialized
      * @return a new instancce of the given class.
-     *
-     * @throws {@link EasyMockAnnotationInitializationException} when initailzation failed or no default constructor
+     * <p>
+     * @throws EasyMockAnnotationInitializationException when initailzation failed or no default constructor
      * found.
      */
     public Object initialize(Class<?> clazz) throws EasyMockAnnotationInitializationException {
