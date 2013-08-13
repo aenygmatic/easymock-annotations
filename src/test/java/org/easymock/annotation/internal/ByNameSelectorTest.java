@@ -69,6 +69,16 @@ public class ByNameSelectorTest {
     }
 
     @Test
+    public void testGetMatchingMockShouldReturnFirstMockWhenNoMatchingOne() {
+        //GIVEN
+        initializeMockHolderFields();
+        //WHEN
+        MockHolder actual = underTest.getMatchingMock("noSuchField", mocks);
+        //WHEN
+        assertEquals(mockHolder, actual);
+    }
+
+    @Test
     public void testGetMatchingMockShouldReturnEmptyMockWhenMockListIsNull() {
         //GIVEN
         List<MockHolder> mockList = null;
