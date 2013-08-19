@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import org.easymock.annotation.EasyMockAnnotations;
@@ -27,6 +26,8 @@ import integrationtest.support.ComponentWithGenericFields;
  */
 public class GenericCollectionInitializationIntegrationTest {
 
+    @Mock
+    private Set<Object> objects;
     @Mock
     private Set<String> strings;
     @Mock
@@ -86,7 +87,12 @@ public class GenericCollectionInitializationIntegrationTest {
     }
 
     @Test
-    @Ignore("Not implemented yet")
     public void testInitializeShouldInejctMocksByGenericParameterWhenTheyHaveTheSameType() {
+        //GIVEN annotated fields in this class
+        //WHEN  setUp method is called
+        //AND   this method is called
+        //THEN
+        assertEquals(objects, underTest.getObjectSet());
+        assertEquals(strings, underTest.getSet());
     }
 }

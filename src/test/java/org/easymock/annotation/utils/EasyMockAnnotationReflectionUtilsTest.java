@@ -3,7 +3,9 @@ package org.easymock.annotation.utils;
 import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -13,6 +15,8 @@ import org.junit.Test;
  * @author Balazs Berkes
  */
 public class EasyMockAnnotationReflectionUtilsTest {
+
+    public Map<Integer, String> fieldWithGenericParams;
 
     @Test
     public void testGetInheritanceDistanceShouldReturnZeroWhenClassIsNotSuperclass() {
@@ -54,6 +58,17 @@ public class EasyMockAnnotationReflectionUtilsTest {
         List<Field> allFields = EasyMockAnnotationReflectionUtils.getAllFields(SubClass.class);
         //THEN
         assertEquals(3, allFields.size());
+    }
+
+    @Test
+    public void testGetGenericParametersShouldReturnGenericParametersOfTheField() throws Exception {
+        //GIVEN
+        Field field = this.getClass().getField("fieldWithGenericParams");
+        //WHEN
+        List<Type> genericParameters = EasyMockAnnotationReflectionUtils.getGenericParameters(field);
+        //THEN
+        assertEquals(Integer.class, genericParameters.get(0));
+        assertEquals(String.class, genericParameters.get(1));
     }
 }
 

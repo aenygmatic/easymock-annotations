@@ -1,6 +1,10 @@
 package org.easymock.annotation.internal;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.List;
+
+import org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils;
 
 /**
  * Wrapper class for a mock. It conatains the mock's name, the source field and the mock itself.
@@ -45,6 +49,10 @@ public class MockHolder {
 
     public String getName() {
         return name == null ? "" : name;
+    }
+
+    public List<Type> getGenericParameters() {
+        return EasyMockAnnotationReflectionUtils.getGenericParameters(sourceField);
     }
 
     @Override

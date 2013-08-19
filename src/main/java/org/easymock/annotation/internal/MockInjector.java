@@ -24,6 +24,7 @@ public class MockInjector {
 
     private Set<MockHolder> mocks;
     private ByNameSelector byNameSelector = new ByNameSelector();
+    private ByGenericSelector byGenericSelector = new ByGenericSelector();
 
     /**
      * Injects the given mock into the tested object.
@@ -52,9 +53,10 @@ public class MockInjector {
     private void injectField(Field field, Object target) throws EasyMockAnnotationReflectionException {
         Class<?> type = field.getType();
         List<MockHolder> closestMocks = getClosestMocks(type);
-        if (!closestMocks.isEmpty()) {
+        List<MockHolder> genericlyEqualsMock = byGenericSelector.getMatchingMocks(field, closestMocks);
+        if (!genericlyEqualsMock.isEmpty()) {
             String targetFieldName = field.getName();
-            MockHolder matchingMock = byNameSelector.getMatchingMock(targetFieldName, closestMocks);
+            MockHolder matchingMock = byNameSelector.getMatchingMock(targetFieldName, genericlyEqualsMock);
             setField(field, target, matchingMock.getMock());
         }
     }

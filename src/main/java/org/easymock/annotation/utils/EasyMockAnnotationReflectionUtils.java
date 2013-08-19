@@ -8,6 +8,8 @@ import static java.lang.reflect.Modifier.isFinal;
 import static java.lang.reflect.Modifier.isStatic;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -116,6 +118,22 @@ public final class EasyMockAnnotationReflectionUtils {
         }
 
         return fields;
+    }
+
+    /**
+     * Returns the generic parameters of the given field.
+     * <p>
+     * @param field field to be scanned
+     * @return the generic parameters
+     */
+    public static List<Type> getGenericParameters(Field field) {
+        List<Type> genericParameters = new LinkedList<Type>();
+        Type genericType = field.getGenericType();
+        if (genericType instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) genericType;
+            genericParameters.addAll(Arrays.asList(parameterizedType.getActualTypeArguments()));
+        }
+        return genericParameters;
     }
 
     private EasyMockAnnotationReflectionUtils() {
