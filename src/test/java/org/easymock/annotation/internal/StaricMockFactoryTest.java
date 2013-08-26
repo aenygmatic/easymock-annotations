@@ -24,61 +24,74 @@ public class StaricMockFactoryTest {
 
     @Test
     public void testCreateMockShouldCreateDefaultMock() {
-        //GIVEN
-        MockType type = MockType.DEFAULT;
-        //WHEN
+        MockType type = givenEasyMockDefaultMock();
+
         Object mock = underTest.createMock(MockFactory.class, type);
-        //THEN
-        assertTrue(mock instanceof MockFactory);
+
+        assertCorrectMockTypeCreated(mock);
     }
 
     @Test
     public void testCreateMockShouldCreateNiceMock() {
-        //GIVEN
-        MockType type = MockType.NICE;
-        //WHEN
+        MockType type = givenEasyMockNiceMock();
+
         Object mock = underTest.createMock(MockFactory.class, type);
-        //THEN
-        assertTrue(mock instanceof MockFactory);
+
+        assertCorrectMockTypeCreated(mock);
     }
 
     @Test
     public void testCreateMockShouldCreateStrictMock() {
-        //GIVEN
-        MockType type = MockType.STRICT;
-        //WHEN
+        MockType type = givenEasyMockStrictMock();
+
         Object mock = underTest.createMock(MockFactory.class, type);
-        //THEN
-        assertTrue(mock instanceof MockFactory);
+
+        assertCorrectMockTypeCreated(mock);
     }
 
     @Test
     public void testCreateMockShouldCreateDefaultMockWithName() {
-        //GIVEN
-        MockType type = MockType.DEFAULT;
-        //WHEN
+        MockType type = givenEasyMockDefaultMock();
+
         Object mock = underTest.createMock(MockFactory.class, type, MOCK_NAME);
-        //THEN
-        assertTrue(mock instanceof MockFactory);
+
+        assertCorrectMockTypeCreated(mock);
     }
 
     @Test
     public void testCreateMockShouldCreateNiceMockWithName() {
-        //GIVEN
-        MockType type = MockType.NICE;
-        //WHEN
+        MockType type = givenEasyMockNiceMock();
+
         Object mock = underTest.createMock(MockFactory.class, type, MOCK_NAME);
-        //THEN
-        assertTrue(mock instanceof MockFactory);
+
+        assertCorrectMockTypeCreated(mock);
     }
 
     @Test
     public void testCreateMockShouldCreateStrictMockWithName() {
-        //GIVEN
-        MockType type = MockType.STRICT;
-        //WHEN
+        MockType type = givenEasyMockStrictMock();
+
         Object mock = underTest.createMock(MockFactory.class, type, MOCK_NAME);
-        //THEN
+
+        assertCorrectMockTypeCreated(mock);
+    }
+
+    private MockType givenEasyMockDefaultMock() {
+        MockType type = MockType.DEFAULT;
+        return type;
+    }
+
+    private MockType givenEasyMockNiceMock() {
+        MockType type = MockType.NICE;
+        return type;
+    }
+
+    private MockType givenEasyMockStrictMock() {
+        MockType type = MockType.STRICT;
+        return type;
+    }
+
+    private void assertCorrectMockTypeCreated(Object mock) {
         assertTrue(mock instanceof MockFactory);
     }
 }

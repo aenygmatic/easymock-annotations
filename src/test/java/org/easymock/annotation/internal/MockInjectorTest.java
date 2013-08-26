@@ -45,57 +45,52 @@ public class MockInjectorTest {
 
     @Test
     public void testInjectMocksWhenAllFieldHasUniqueType() {
-        //GIVEN
         givenMocks(superClass, clazz, subClass);
         givenClassWithUniqueTypeFields();
-        //WHEN
+
         underTest.injectTo(classUniqueTypeField);
-        //THEN
+
         assertFieldsAreInjectedByType();
     }
 
     @Test
     public void testInjectMocksWhenFieldsHaveTheSameTypeShouldMatchByName() {
-        //GIVEN
         givenMocks(superClass, anotherSuperClass);
         givenClassWithUniqueNamedFieldsOfSameType();
-        //WHEN
+
         underTest.injectTo(classUniqueNamedFields);
-        //THEN
+
         assertFieldsInjectedByName();
     }
 
     @Test
     public void testInjectMocksWhenFieldsHaveTheSameTypeShouldMatchByLowerCaseName() {
-        //GIVEN
         givenMocks(superClass, anotherSuperClass);
         givenClassWithUniqueLowerCaseNamedFieldsOfSameType();
-        //WHEN
+
         underTest.injectTo(classUniqueLowCaseNamedFields);
-        //THEN
+
         assertFieldsInjectedByLowerCaseName();
     }
 
     @Test
     public void testInjectMocksWhenFieldIsInterfaceShouldInjectImplementation() {
-        //GIVEN
         givenMocks(set);
         givenTestedClassWithInterfaceField();
-        //WHEN
+
         underTest.injectTo(classWithInterfaceField);
-        //THEN
+
         assertInterfaceImplIsInjected();
 
     }
 
     @Test
     public void testInjectMocksShouldInjectInheritedFields() {
-        //GIVEN
         givenMocks(superClass, clazz, subClass);
         givenTestedClassWithInherite4dFields();
-        //WHEN
+
         underTest.injectTo(classWithInheritedFields);
-        //THEN
+
         assertInheritedFieldsAreInjected();
 
     }
@@ -108,7 +103,6 @@ public class MockInjectorTest {
             m.setSourceField(getFieldNameOf(mock));
             this.mocks.add(m);
         }
-
         underTest.addMocks(this.mocks);
     }
 

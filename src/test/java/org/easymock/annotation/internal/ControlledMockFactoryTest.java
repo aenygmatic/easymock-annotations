@@ -5,17 +5,16 @@
  */
 package org.easymock.annotation.internal;
 
+import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
 
 import org.easymock.IMocksControl;
 import org.easymock.MockType;
 import org.junit.Before;
 import org.junit.Test;
-
-import org.easymock.annotation.EasyMockAnnotations;
-import org.easymock.annotation.Mock;
 
 /**
  * Unit test for {@link ControlledMockFactory}.
@@ -26,38 +25,49 @@ public class ControlledMockFactoryTest {
 
     private static final String MOCK_NAME = "mockname";
 
-    @Mock
     private IMocksControl control;
-    @Mock
-    private Thread mock;
+    private Object mock;
 
     private MockFactory underTest;
 
     @Before
     public void setUp() {
-        EasyMockAnnotations.initialize(this);
+        mock = createMock(Object.class);
+        control = createMock(IMocksControl.class);
+
         underTest = new ControlledMockFactory(control);
     }
 
     @Test
     public void testCreateMockShouldCreateMockRegardlessOfType() {
-        //GIVEN
-        expect(control.createMock(Thread.class)).andReturn(mock);
-        replay(control);
-        //WHEN
-        underTest.createMock(Thread.class, MockType.DEFAULT);
-        //THEN
-        verify(control);
+        givenIMocksControlCreatesMock();
+
+        Object actual = underTest.createMock(Object.class, MockType.DEFAULT);
+
+        assertIMockControlMockCreated(actual);
     }
 
     @Test
     public void testCreateMockShouldCreateMockWithName() {
-        //GIVEN
-        expect(control.createMock(MOCK_NAME, Thread.class)).andReturn(mock);
+        givenIMocksControlCreatesNamedMock();
+
+        Object actual = underTest.createMock(Object.class, MockType.DEFAULT, MOCK_NAME);
+
+        assertIMockControlMockCreated(actual);
+    }
+
+    private void givenIMocksControlCreatesMock() {
+        expect(control.createMock(Object.class)).andReturn(mock);
         replay(control);
-        //WHEN
-        underTest.createMock(Thread.class, MockType.DEFAULT, MOCK_NAME);
-        //THEN
+    }
+
+    private void givenIMocksControlCreatesNamedMock() {
+        expect(control.createMock(MOCK_NAME, Object.class)).andReturn(mock);
+        replay(control);
+    }
+
+    private void assertIMockControlMockCreated(Object actual) {
         verify(control);
+        assertEquals(mock, actual);
     }
 }
