@@ -27,9 +27,7 @@ public class EasyMockSupportMockFactoryTest {
 
     @Before
     public void setUp() {
-        mock = createMock(Object.class);
-        easyMockSupport = createMock(EasyMockSupport.class);
-
+        initializeMocks();
         underTest = new EasyMockSupportMockFactory(easyMockSupport);
     }
 
@@ -118,8 +116,12 @@ public class EasyMockSupportMockFactoryTest {
     }
 
     private void assertEasyMockSupportMockCreated(Object actual) {
-        //THEN
         verify(easyMockSupport);
         assertEquals(mock, actual);
+    }
+
+    private void initializeMocks() {
+        mock = createMock(Object.class);
+        easyMockSupport = createMock(EasyMockSupport.class);
     }
 }

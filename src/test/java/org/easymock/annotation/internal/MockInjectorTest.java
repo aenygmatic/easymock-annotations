@@ -35,12 +35,8 @@ public class MockInjectorTest {
 
     @Before
     public void setUp() {
+        initializeTestComponents();
         underTest = new MockInjector();
-        superClass = new SuperClass();
-        anotherSuperClass = new SuperClass();
-        clazz = new Clazz();
-        subClass = new SubClass();
-        set = new HashSet<String>();
     }
 
     @Test
@@ -163,6 +159,14 @@ public class MockInjectorTest {
             }
         }
         return field;
+    }
+
+    private void initializeTestComponents() {
+        superClass = new SuperClass();
+        anotherSuperClass = new SuperClass();
+        clazz = new Clazz();
+        subClass = new SubClass();
+        set = new HashSet<String>();
     }
 
     class SuperClass {

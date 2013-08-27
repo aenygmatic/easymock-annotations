@@ -33,8 +33,8 @@ public class ByGenericSelectorTest {
 
     @Before
     public void setUp() throws NoSuchFieldException {
-        underTest = new ByGenericSelector();
         initializeMocks();
+        underTest = new ByGenericSelector();
     }
 
     @Test

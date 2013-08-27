@@ -32,9 +32,7 @@ public class ControlledMockFactoryTest {
 
     @Before
     public void setUp() {
-        mock = createMock(Object.class);
-        control = createMock(IMocksControl.class);
-
+        initializeMocks();
         underTest = new ControlledMockFactory(control);
     }
 
@@ -69,5 +67,10 @@ public class ControlledMockFactoryTest {
     private void assertIMockControlMockCreated(Object actual) {
         verify(control);
         assertEquals(mock, actual);
+    }
+
+    private void initializeMocks() {
+        mock = createMock(Object.class);
+        control = createMock(IMocksControl.class);
     }
 }

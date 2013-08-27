@@ -28,19 +28,16 @@ public class ByNameSelectorTest {
 
     @Before
     public void setUp() {
-        mockHolder = createMock(MockHolder.class);
-        holder = createMock(MockHolder.class);
-        lowercasemock = createMock(MockHolder.class);
-
+        initializeMocks();
         underTest = new ByNameSelector();
     }
 
     @Test
     public void testGetMatchingMockDefaultStategyShouldSelectEqualName() {
         givenMockHolderFields();
-        //WHEN
+
         MockHolder actual = underTest.getMatchingMock("mockHoder", mocks);
-        //WHEN
+
         assertEquals(mockHolder, actual);
     }
 
@@ -98,5 +95,11 @@ public class ByNameSelectorTest {
         mocks.add(holder);
         mocks.add(lowercasemock);
         replay(mockHolder, holder, lowercasemock);
+    }
+
+    private void initializeMocks() {
+        mockHolder = createMock(MockHolder.class);
+        holder = createMock(MockHolder.class);
+        lowercasemock = createMock(MockHolder.class);
     }
 }
