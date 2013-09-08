@@ -1,20 +1,27 @@
-package org.easymock.annotation.internal;
+package org.easymock.annotation.internal.selection;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+
+import org.easymock.annotation.internal.MockHolder;
 
 /**
  * Selects one mock which has matching name decided by the given {@link SelectionStrategy}.
  * <p>
  * @author Balazs Berkes
  */
-public class ByNameSelector {
+public class ByNameSelector implements MockSelector<String> {
 
     public static final SelectionStrategy NAME_EQUALS_STRATEGY = new NameEqualsStrategy();
     public static final SelectionStrategy NAME_EQUALS_IGNORE_CASE_STRATEGY = new NameEqualsIgnoreCaseStrategy();
     public static final SelectionStrategy NAME_CONTAINS_STRATEGY = new NameContainsStrategy();
 
-    private List<SelectionStrategy> strategies = Arrays.asList(NAME_EQUALS_STRATEGY, NAME_EQUALS_IGNORE_CASE_STRATEGY, NAME_CONTAINS_STRATEGY);
+    private static List<SelectionStrategy> STRATEGIES = Arrays.asList(NAME_EQUALS_STRATEGY, NAME_EQUALS_IGNORE_CASE_STRATEGY, NAME_CONTAINS_STRATEGY);
+
+    public static void overrideStategy(SelectionStrategy... stategies) {
+        STRATEGIES = Arrays.asList(stategies);
+    }
 
     /**
      * Selecta the matching mock from the given mocks according to the selection strategy.
@@ -32,32 +39,27 @@ public class ByNameSelector {
      * no match found the first element of the list will be returned. If the given list is empty or
      * {@code null} {@link MockHolder#emptyMock()} will be returned.
      */
-    public MockHolder getMatchingMock(String targetName, List<MockHolder> mocks) {
+    @Override
+    public List<MockHolder> getMatchingMocks(String targetName, List<MockHolder> mocks) {
+        List<MockHolder> matchingMocks = new LinkedList<MockHolder>();
         MockHolder matchingMock = null;
-        if (notEmpty(mocks)) {
-            int highestPriority = strategies.size() + 1;
-            for (MockHolder mock : mocks) {
-                int currentPrio = getPriorityLevel(targetName, mock);
-                if (currentPrio < highestPriority) {
-                    highestPriority = currentPrio;
-                    matchingMock = mock;
-                }
-            }
-            matchingMock = getFirstWhenNoMatchByName(matchingMock, mocks);
-        } else {
-            matchingMock = MockHolder.emptyMock();
-        }
-        return matchingMock;
-    }
 
-    public ByNameSelector overrideStategy(SelectionStrategy... stategies) {
-        strategies = Arrays.asList(stategies);
-        return this;
+        int highestPriority = STRATEGIES.size() + 1;
+        for (MockHolder mock : mocks) {
+            int currentPrio = getPriorityLevel(targetName, mock);
+            if (currentPrio < highestPriority) {
+                highestPriority = currentPrio;
+                matchingMock = mock;
+            }
+        }
+        addMatchIfFound(matchingMock, matchingMocks);
+
+        return matchingMocks;
     }
 
     private int getPriorityLevel(String targetName, MockHolder mock) {
         int currentPrio = 0;
-        for (SelectionStrategy stategy : strategies) {
+        for (SelectionStrategy stategy : STRATEGIES) {
             if (stategy.isMatching(targetName, mock.getSourceName())) {
                 break;
             }
@@ -66,18 +68,10 @@ public class ByNameSelector {
         return currentPrio;
     }
 
-    private MockHolder getFirstWhenNoMatchByName(MockHolder matchingMock, List<MockHolder> mocks) {
-        MockHolder mock;
-        if (matchingMock == null) {
-            mock = mocks.get(0);
-        } else {
-            mock = matchingMock;
+    private void addMatchIfFound(MockHolder matchingMock, List<MockHolder> matchingMocks) {
+        if (matchingMock != null) {
+            matchingMocks.add(matchingMock);
         }
-        return mock;
-    }
-
-    private boolean notEmpty(List<?> list) {
-        return list != null && !list.isEmpty();
     }
 
     public static interface SelectionStrategy {

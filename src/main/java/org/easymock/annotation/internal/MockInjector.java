@@ -1,17 +1,17 @@
 package org.easymock.annotation.internal;
 
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getAllFields;
-import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getInheritanceDistance;
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.setField;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.easymock.annotation.exception.EasyMockAnnotationReflectionException;
+import org.easymock.annotation.internal.selection.ByGenericSelector;
+import org.easymock.annotation.internal.selection.ByNameSelector;
+import org.easymock.annotation.internal.selection.ByTypeSelector;
 
 /**
  * Injects the the given mocks into the target class. Mocks are injected by type and name.
@@ -20,10 +20,9 @@ import org.easymock.annotation.exception.EasyMockAnnotationReflectionException;
  */
 public class MockInjector {
 
-    private static final int MAX_DEPTH = Integer.MAX_VALUE;
-
-    private Set<MockHolder> mocks;
+    private List<MockHolder> mocks;
     private ByNameSelector byNameSelector = new ByNameSelector();
+    private ByTypeSelector byTypeSelector = new ByTypeSelector();
     private ByGenericSelector byGenericSelector = new ByGenericSelector();
 
     /**
@@ -33,7 +32,7 @@ public class MockInjector {
      * @return instance of this {@code MockInjector}.
      */
     public MockInjector addMocks(Set<MockHolder> mocks) {
-        this.mocks = new HashSet<MockHolder>(mocks);
+        this.mocks = new LinkedList<MockHolder>(mocks);
         return this;
     }
 
@@ -51,44 +50,29 @@ public class MockInjector {
     }
 
     private void injectField(Field field, Object target) throws EasyMockAnnotationReflectionException {
-        Class<?> type = field.getType();
-        List<MockHolder> closestMocks = getClosestMocks(type);
-        List<MockHolder> genericlyEqualsMock = byGenericSelector.getMatchingMocks(field, closestMocks);
-        if (!genericlyEqualsMock.isEmpty()) {
-            String targetFieldName = field.getName();
-            MockHolder matchingMock = byNameSelector.getMatchingMock(targetFieldName, genericlyEqualsMock);
-            setField(field, target, matchingMock.getMock());
-        }
-    }
-
-    private List<MockHolder> getClosestMocks(Class<?> type) {
-        List<MockHolder> closestMocks = new ArrayList<MockHolder>();
-        int closestDist = MAX_DEPTH;
-        for (MockHolder mock : mocks) {
-            final int currentDist = getInheritanceDistance(mock.getMock(), type);
-            if (isInstance(currentDist) && isCloserThanCurrent(currentDist, closestDist)) {
-                closestDist = currentDist;
-                closestMocks.clear();
-                closestMocks.add(mock);
-            } else if (isInstance(currentDist) && isCloseAsCurrent(currentDist, closestDist)) {
-                closestMocks.add(mock);
+        List<MockHolder> closestByTypeMocks = byTypeSelector.getMatchingMocks(field.getType(), mocks);
+        if (notEmpty(closestByTypeMocks)) {
+            List<MockHolder> genericlyEqualsMocks = byGenericSelector.getMatchingMocks(field, closestByTypeMocks);
+            if (notEmpty(genericlyEqualsMocks)) {
+                List<MockHolder> matchingMocks = byNameSelector.getMatchingMocks(field.getName(), genericlyEqualsMocks);
+                MockHolder matchingMock = matchingMocks.get(0);
+                setField(field, target, matchingMock.getMock());
             }
         }
-        if (closestDist == MAX_DEPTH) {
-            closestMocks = Collections.EMPTY_LIST;
+    }
+
+    private MockHolder getFirstIfAny(List<MockHolder> list) {
+        MockHolder result;
+        if (list.isEmpty()) {
+            result = MockHolder.emptyMock();
+        } else {
+            result = list.get(0);
         }
-        return closestMocks;
+        return result;
+
     }
 
-    private boolean isInstance(final int dist) {
-        return dist != -1;
-    }
-
-    private boolean isCloserThanCurrent(final int dist, int inheritanceDistance) {
-        return dist < inheritanceDistance;
-    }
-
-    private boolean isCloseAsCurrent(final int dist, int inheritanceDistance) {
-        return dist == inheritanceDistance;
+    private boolean notEmpty(List<?> list) {
+        return !list.isEmpty();
     }
 }

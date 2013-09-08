@@ -1,4 +1,4 @@
-package org.easymock.annotation.internal;
+package org.easymock.annotation.internal.selection;
 
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getGenericParameters;
 
@@ -7,12 +7,14 @@ import java.lang.reflect.Type;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.easymock.annotation.internal.MockHolder;
+
 /**
  * Selects the the mocks which has the same generic type.
  * <p>
  * @author Balazs Berkes
  */
-public class ByGenericSelector {
+public class ByGenericSelector implements MockSelector<Field> {
 
     /**
      * Selects the mocks which has the same generic parameter as the target field.
@@ -22,6 +24,7 @@ public class ByGenericSelector {
      * @param mocks list of mocks
      * @return the mock which are parameterized with the same classes
      */
+    @Override
     public List<MockHolder> getMatchingMocks(Field targetField, List<MockHolder> mocks) {
         List<MockHolder> matchingMocks = new LinkedList<MockHolder>();
         List<Type> targetGenerics = getGenericParameters(targetField);

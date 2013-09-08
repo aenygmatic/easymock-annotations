@@ -32,13 +32,13 @@ public class ClassInitializer {
             Constructor<?> constructor = findDefaultConstructor(ctors);
             testedObject = constructor.newInstance();
         } catch (InstantiationException ex) {
-            throw new EasyMockAnnotationInitializationException("Failed to initialized tested class!", ex);
+            throwEasyMockAnnotationInitializationException(ex);
         } catch (IllegalAccessException ex) {
-            throw new EasyMockAnnotationInitializationException("Failed to initialized tested class!", ex);
+            throwEasyMockAnnotationInitializationException(ex);
         } catch (IllegalArgumentException ex) {
-            throw new EasyMockAnnotationInitializationException("Failed to initialized tested class!", ex);
+            throwEasyMockAnnotationInitializationException(ex);
         } catch (InvocationTargetException ex) {
-            throw new EasyMockAnnotationInitializationException("Failed to initialized tested class!", ex);
+            throwEasyMockAnnotationInitializationException(ex);
         }
         return testedObject;
     }
@@ -66,5 +66,9 @@ public class ClassInitializer {
         }
         ctor.setAccessible(true);
         return ctor;
+    }
+
+    private void throwEasyMockAnnotationInitializationException(Throwable ex) throws EasyMockAnnotationInitializationException {
+        throw new EasyMockAnnotationInitializationException("Failed to initialized tested class!", ex);
     }
 }

@@ -1,9 +1,10 @@
-package org.easymock.annotation.internal;
+package org.easymock.annotation.internal.selection;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -11,6 +12,8 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import org.easymock.annotation.internal.MockHolder;
 
 /**
  * Unit test for {@link ByNameSelector}.
@@ -36,54 +39,45 @@ public class ByNameSelectorTest {
     public void testGetMatchingMockDefaultStategyShouldSelectEqualName() {
         givenMockHolderFields();
 
-        MockHolder actual = underTest.getMatchingMock("mockHoder", mocks);
+        List<MockHolder> actual = underTest.getMatchingMocks("mockHoder", mocks);
 
-        assertEquals(mockHolder, actual);
+        assertEquals(mockHolder, firstElementOf(actual));
     }
 
     @Test
     public void testGetMatchingMockDefaultStategyShouldSelectEqualIgnoreCaseName() {
         givenMockHolderFields();
 
-        MockHolder actual = underTest.getMatchingMock("lowerCaseMock", mocks);
+        List<MockHolder> actual = underTest.getMatchingMocks("lowerCaseMock", mocks);
 
-        assertEquals(lowercasemock, actual);
+        assertEquals(lowercasemock, firstElementOf(actual));
     }
 
     @Test
     public void testGetMatchingMockDefaultStategyShouldSelectMockHolderWhenItsNameContainedInFieldsName() {
         givenMockHolderFields();
 
-        MockHolder actual = underTest.getMatchingMock("holderInName", mocks);
+        List<MockHolder> actual = underTest.getMatchingMocks("holderInName", mocks);
 
-        assertEquals(holder, actual);
+        assertEquals(holder, firstElementOf(actual));
     }
 
     @Test
     public void testGetMatchingMockShouldReturnFirstMockWhenNoMatchingOne() {
         givenMockHolderFields();
 
-        MockHolder actual = underTest.getMatchingMock("noSuchField", mocks);
+        List<MockHolder> actual = underTest.getMatchingMocks("noSuchField", mocks);
 
-        assertEquals(mockHolder, actual);
+        assertEquals(mockHolder, firstElementOf(actual));
     }
 
     @Test
-    public void testGetMatchingMockShouldReturnEmptyMockWhenMockListIsNull() {
-        List<MockHolder> mockList = null;
-
-        MockHolder actual = underTest.getMatchingMock("name", mockList);
-
-        assertEquals(MockHolder.emptyMock(), actual);
-    }
-
-    @Test
-    public void testGetMatchingMockShouldReturnEmptyMockWhenMockListIsEmpty() {
+    public void testGetMatchingMockShouldReturnEmptyMocksWhenMockListIsEmpty() {
         List<MockHolder> mockList = Collections.EMPTY_LIST;
 
-        MockHolder actual = underTest.getMatchingMock("name", mockList);
+        List<MockHolder> actual = underTest.getMatchingMocks("name", mockList);
 
-        assertEquals(MockHolder.emptyMock(), actual);
+        assertTrue(actual.isEmpty());
     }
 
     private void givenMockHolderFields() {
@@ -101,5 +95,9 @@ public class ByNameSelectorTest {
         mockHolder = createMock(MockHolder.class);
         holder = createMock(MockHolder.class);
         lowercasemock = createMock(MockHolder.class);
+    }
+
+    private MockHolder firstElementOf(List<MockHolder> actual) {
+        return actual.get(0);
     }
 }

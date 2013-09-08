@@ -1,4 +1,4 @@
-package org.easymock.annotation.internal;
+package org.easymock.annotation.internal.selection;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -11,6 +11,8 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import org.easymock.annotation.internal.MockHolder;
 
 /**
  * Unit test for {@link ByGenericSelector}.
