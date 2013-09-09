@@ -6,7 +6,6 @@ import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.se
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.easymock.annotation.exception.EasyMockAnnotationReflectionException;
 import org.easymock.annotation.internal.selection.ByGenericSelector;
@@ -31,7 +30,7 @@ public class MockInjector {
      * @param mocks mocks to inject
      * @return instance of this {@code MockInjector}.
      */
-    public MockInjector addMocks(Set<MockHolder> mocks) {
+    public MockInjector addMocks(List<MockHolder> mocks) {
         this.mocks = new LinkedList<MockHolder>(mocks);
         return this;
     }
@@ -55,7 +54,7 @@ public class MockInjector {
             List<MockHolder> genericlyEqualsMocks = byGenericSelector.getMatchingMocks(field, closestByTypeMocks);
             if (notEmpty(genericlyEqualsMocks)) {
                 List<MockHolder> matchingMocks = byNameSelector.getMatchingMocks(field.getName(), genericlyEqualsMocks);
-                MockHolder matchingMock = matchingMocks.get(0);
+                MockHolder matchingMock = getFirstIfAny(matchingMocks);
                 setField(field, target, matchingMock.getMock());
             }
         }

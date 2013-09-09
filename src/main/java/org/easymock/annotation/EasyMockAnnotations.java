@@ -5,8 +5,8 @@ import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.ge
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.setField;
 
 import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -54,8 +54,8 @@ public class EasyMockAnnotations {
      */
     public static IMocksControl initializeWithMockControl(Object testclass) {
         IMocksControl control = injectMockControl(testclass);
-        Set<MockHolder> mocks = processEasyMockAnnotations(testclass, new ControlledMockFactory(control));
-        Object testedObject = initializeTestedClass(testclass);
+        List<MockHolder> mocks = processEasyMockAnnotations(testclass, new ControlledMockFactory(control));
+        Object testedObject = initializeTestedClass(testclass, mocks);
         if (testedObject != null) {
             injectToTestedClass(testedObject, mocks);
         }
@@ -87,8 +87,8 @@ public class EasyMockAnnotations {
         } else {
             mockFactory = new StaricMockFactory();
         }
-        Set<MockHolder> mocks = processEasyMockAnnotations(testclass, mockFactory);
-        Object testedObject = initializeTestedClass(testclass);
+        List<MockHolder> mocks = processEasyMockAnnotations(testclass, mockFactory);
+        Object testedObject = initializeTestedClass(testclass, mocks);
         if (testedObject != null) {
             injectToTestedClass(testedObject, mocks);
         }
@@ -120,19 +120,19 @@ public class EasyMockAnnotations {
         return control;
     }
 
-    private static Object initializeTestedClass(Object testclass) {
+    private static Object initializeTestedClass(Object testclass, List<MockHolder> mocks) {
         Object testedClass = null;
         boolean annotationFound = false;
         for (Field field : testclass.getClass().getDeclaredFields()) {
             Injected annotation = field.getAnnotation(Injected.class);
             if (annotation != null) {
                 annotationFound = true;
-                testedClass = createInstanceIfNull(field, testclass);
+                testedClass = createInstanceIfNull(field, testclass, mocks);
             } else {
                 TestSubject testSubject = field.getAnnotation(TestSubject.class);
                 if (testSubject != null) {
                     annotationFound = true;
-                    testedClass = createInstanceIfNull(field, testclass);
+                    testedClass = createInstanceIfNull(field, testclass, mocks);
                 }
             }
         }
@@ -142,9 +142,9 @@ public class EasyMockAnnotations {
         return testedClass;
     }
 
-    private static Set<MockHolder> processEasyMockAnnotations(Object testclass, MockFactory mockFactory) {
+    private static List<MockHolder> processEasyMockAnnotations(Object testclass, MockFactory mockFactory) {
         Class<? extends Object> clazz = getClassOfTest(testclass);
-        Set<MockHolder> mocks = new HashSet<MockHolder>();
+        List<MockHolder> mocks = new LinkedList<MockHolder>();
         for (Field field : getAllFields(clazz)) {
             Mock annotation = field.getAnnotation(Mock.class);
             if (annotation != null) {
@@ -161,7 +161,7 @@ public class EasyMockAnnotations {
         return mocks;
     }
 
-    private static Object mockIt(Field field, String name, MockType mockType, MockFactory mockFactory, Set<MockHolder> mocks) {
+    private static Object mockIt(Field field, String name, MockType mockType, MockFactory mockFactory, List<MockHolder> mocks) {
         Object mockedObject;
         Class<?> typeOfField = field.getType();
         mockedObject = createMock(mockFactory, typeOfField, mockType, name);
@@ -180,7 +180,7 @@ public class EasyMockAnnotations {
         return mockedObject;
     }
 
-    private static void injectToTestedClass(Object testedObject, Set<MockHolder> mocks) {
+    private static void injectToTestedClass(Object testedObject, List<MockHolder> mocks) {
         new MockInjector().addMocks(mocks).injectTo(testedObject);
     }
 
@@ -192,10 +192,10 @@ public class EasyMockAnnotations {
         return mock;
     }
 
-    private static Object createInstanceIfNull(Field field, Object testclass) {
+    private static Object createInstanceIfNull(Field field, Object testclass, List<MockHolder> mocks) {
         Object testedClass = getField(field, testclass);
         if (testedClass == null) {
-            testedClass = new ClassInitializer().initialize(field.getType());
+            testedClass = new ClassInitializer().initialize(field.getType(), mocks);
             setField(field, testclass, testedClass);
         }
         return testedClass;

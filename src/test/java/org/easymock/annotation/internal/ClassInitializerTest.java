@@ -2,6 +2,7 @@ package org.easymock.annotation.internal;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.Before;
@@ -27,7 +28,7 @@ public class ClassInitializerTest {
     public void testInitializeShouldCreateNewInstanceWhenClassHasDefaultConstructor() {
         clazz = ReentrantLock.class;
 
-        Object actualClass = underTest.initialize(clazz);
+        Object actualClass = underTest.initialize(clazz, Collections.EMPTY_LIST);
 
         assertTrue(actualClass instanceof ReentrantLock);
     }

@@ -2,8 +2,7 @@ package org.easymock.annotation.internal;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.easymock.annotation.exception.EasyMockAnnotationInitializationException;
 
@@ -14,18 +13,17 @@ import org.easymock.annotation.exception.EasyMockAnnotationInitializationExcepti
  */
 public class ClassInitializer {
 
-    private Map<Class<?>, Object> parameters;
-
     /**
      * Initialize an instance of the given class if it has default construtor.
      * <p>
      * @param clazz class to be initialized
+     * @param mocks list of mocked object which can be used as consturctor parameter
      * @return a new instancce of the given class.
      * <p>
      * @throws EasyMockAnnotationInitializationException when initailzation failed or no default constructor
      * found.
      */
-    public Object initialize(Class<?> clazz) throws EasyMockAnnotationInitializationException {
+    public Object initialize(Class<?> clazz, List<MockHolder> mocks) throws EasyMockAnnotationInitializationException {
         Object testedObject = null;
         try {
             Constructor<?>[] ctors = clazz.getDeclaredConstructors();
@@ -41,16 +39,6 @@ public class ClassInitializer {
             throwEasyMockAnnotationInitializationException(ex);
         }
         return testedObject;
-    }
-
-    /* "Not implemented yet" */
-    @Deprecated
-    public ClassInitializer addConstructorParam(Object param) {
-        if (parameters == null) {
-            parameters = new HashMap<Class<?>, Object>();
-        }
-        parameters.put(param.getClass(), param);
-        return this;
     }
 
     private Constructor<?> findDefaultConstructor(Constructor[] constructors) {

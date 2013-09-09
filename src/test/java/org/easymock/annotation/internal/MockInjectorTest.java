@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Field;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
@@ -29,7 +31,7 @@ public class MockInjectorTest {
     private TestedClassWithInterfaceField classWithInterfaceField;
     private TestedClassWithInheritedFields classWithInheritedFields;
 
-    private Set<MockHolder> mocks;
+    private List<MockHolder> mocks;
 
     private MockInjector underTest;
 
@@ -92,7 +94,7 @@ public class MockInjectorTest {
     }
 
     private void givenMocks(Object... mocks) {
-        this.mocks = new HashSet<MockHolder>();
+        this.mocks = new LinkedList<MockHolder>();
         for (Object mock : mocks) {
             MockHolder m = new MockHolder();
             m.setMock(mock);
