@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Test;
 
 /**
@@ -16,59 +17,79 @@ import org.junit.Test;
  */
 public class EasyMockAnnotationReflectionUtilsTest {
 
+    private Field field;
+    private Object target;
+    private Class<?> clazz;
     public Map<Integer, String> fieldWithGenericParams;
+
+    @After
+    public void tearDown() {
+        cleanUpFields();
+    }
 
     @Test
     public void testGetInheritanceDistanceShouldReturnZeroWhenClassIsNotSuperclass() {
-        //GIVEN
-        Object target = new Clazz();
-        Class<?> classOfTarget = Clazz.class;
-        //WHEN
-        int inheritanceDistance = EasyMockAnnotationReflectionUtils.getInheritanceDistance(target, classOfTarget);
-        //THEN
+        givenInstanceAndClassOf(new Clazz(), Clazz.class);
+
+        int inheritanceDistance = EasyMockAnnotationReflectionUtils.getInheritanceDistance(target, clazz);
+
         assertEquals(0, inheritanceDistance);
     }
 
     @Test
     public void testGetInheritanceDistanceShouldReturnDistanceWhenClassSuperclass() {
-        //GIVEN
-        Object target = new SubClass();
-        Class<?> clazz = SuperClass.class;
-        //WHEN
+        givenInstanceAndClassOf(new SubClass(), SuperClass.class);
+
         int inheritanceDistance = EasyMockAnnotationReflectionUtils.getInheritanceDistance(target, clazz);
-        //THEN
+
         assertEquals(2, inheritanceDistance);
     }
 
     @Test
     public void testGetInheritanceDistanceShouldReturnDistanceToObjectWhenTargetIsNotRelated() {
-        //GIVEN
-        Object target = new SubClass();
-        Class<?> clazz = StringBuilder.class;
-        //WHEN
+        givenInstanceAndClassOf(new SubClass(), StringBuilder.class);
+
         int inheritanceDistance = EasyMockAnnotationReflectionUtils.getInheritanceDistance(target, clazz);
-        //THEN
+
         assertEquals(-1, inheritanceDistance);
     }
 
     @Test
     public void testGetAllFieldShouldReturnAllFieldsUpToObject() {
-        //GIVEN Class with predecessors with fields.
-        //WHEN
+        givenClassOf(SubClass.class);
+
         List<Field> allFields = EasyMockAnnotationReflectionUtils.getAllFields(SubClass.class);
-        //THEN
+
         assertEquals(3, allFields.size());
     }
 
     @Test
     public void testGetGenericParametersShouldReturnGenericParametersOfTheField() throws Exception {
-        //GIVEN
-        Field field = this.getClass().getField("fieldWithGenericParams");
-        //WHEN
+        givenField("fieldWithGenericParams");
+
         List<Type> genericParameters = EasyMockAnnotationReflectionUtils.getGenericParameters(field);
-        //THEN
+
         assertEquals(Integer.class, genericParameters.get(0));
         assertEquals(String.class, genericParameters.get(1));
+    }
+
+    private void cleanUpFields() {
+        target = null;
+        clazz = null;
+        field = null;
+    }
+
+    private void givenInstanceAndClassOf(Object target, Class<?> clazz) {
+        this.target = target;
+        this.clazz = clazz;
+    }
+
+    private void givenClassOf(Class<?> clazz) {
+        this.clazz = clazz;
+    }
+
+    private void givenField(String name) throws Exception {
+        this.field = this.getClass().getField(name);
     }
 }
 

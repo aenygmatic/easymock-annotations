@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.easymock.annotation.utils;
 
 import static java.lang.reflect.Modifier.isFinal;
@@ -18,7 +14,7 @@ import org.easymock.annotation.exception.EasyMockAnnotationReflectionException;
 
 /**
  * Untility class for reflection based operations.
- *
+ * <p>
  * @author Balazs Berkes
  */
 public final class EasyMockAnnotationReflectionUtils {
@@ -30,21 +26,23 @@ public final class EasyMockAnnotationReflectionUtils {
      * @param target object with field to set
      * @param value value which will be used for the field
      * <p>
-     * @throws EasyMockAnnotationReflectionException when setting the
+     * @throws UnableToWriteFieldException when setting the
      * field failed
      */
-    public static void setField(Field field, Object target, Object value) throws EasyMockAnnotationReflectionException {
+    public static void setField(Field field, Object target, Object value) throws UnableToWriteFieldException {
         if (value != null) {
             if (!isStatic(field.getModifiers()) && !isFinal(field.getModifiers())) {
-                field.setAccessible(true);
-                try {
-                    field.set(target, value);
-                } catch (IllegalArgumentException ex) {
-                    throw new EasyMockAnnotationReflectionException(String.format("Cannot set field '%s' in %s", field.getName(), target.getClass()), ex);
-                } catch (IllegalAccessException ex) {
-                    throw new EasyMockAnnotationReflectionException(String.format("Cannot set field '%s' in %s", field.getName(), target.getClass()), ex);
-                }
+                doSetField(field, target, value);
             }
+        }
+    }
+
+    private static void doSetField(Field field, Object target, Object value) throws UnableToWriteFieldException, SecurityException {
+        field.setAccessible(true);
+        try {
+            field.set(target, value);
+        } catch (Exception ex) {
+            throw new UnableToWriteFieldException(field, ex);
         }
     }
 
@@ -55,20 +53,23 @@ public final class EasyMockAnnotationReflectionUtils {
      * @param target the target object which contains the field
      * @return the value of the field
      * <p>
-     * @throws EasyMockAnnotationReflectionException when setting the
+     * @throws UnableToReadFieldException when setting the
      * field failed
      */
-    public static Object getField(Field field, Object target) throws EasyMockAnnotationReflectionException {
+    public static Object getField(Field field, Object target) throws UnableToReadFieldException {
         Object fieldValue = null;
         if (!isStatic(field.getModifiers()) && !isFinal(field.getModifiers())) {
-            field.setAccessible(true);
-            try {
-                fieldValue = field.get(target);
-            } catch (IllegalArgumentException ex) {
-                throw new EasyMockAnnotationReflectionException("Cannot get field", ex);
-            } catch (IllegalAccessException ex) {
-                throw new EasyMockAnnotationReflectionException("Cannot get field", ex);
-            }
+            fieldValue = doGetField(field, fieldValue, target);
+        }
+        return fieldValue;
+    }
+
+    private static Object doGetField(Field field, Object fieldValue, Object target) throws UnableToReadFieldException, SecurityException {
+        field.setAccessible(true);
+        try {
+            fieldValue = field.get(target);
+        } catch (Exception ex) {
+            throw new UnableToReadFieldException(field, ex);
         }
         return fieldValue;
     }
@@ -76,27 +77,27 @@ public final class EasyMockAnnotationReflectionUtils {
     /**
      * Determines the distance of the given object to the given class in the
      * inheritance tree.
-     *
+     * <p>
      * @param object the root object
      * @param clazz the class to deterime the distance to
-     *
      * @return the distance of the object to the class. If the object is not an
      * instance of the class {@code -1} will return.
      */
     public static int getInheritanceDistance(Object object, Class<?> clazz) {
-        int distance = 0;
-        Class<?> compared = object.getClass();
-        boolean instanceOfClass = clazz.isInstance(object);
-
-        if (!instanceOfClass) {
-            distance = -1;
+        if (clazz.isInstance(object)) {
+            return calculateDistance(object.getClass(), clazz);
         } else {
-            while (compared != clazz) {
-                compared = compared.getSuperclass();
-                distance++;
-                if (compared == Object.class) {
-                    break;
-                }
+            return -1;
+        }
+    }
+
+    private static int calculateDistance(Class<?> compared, Class<?> clazz) {
+        int distance = 0;
+        while (compared != clazz) {
+            compared = compared.getSuperclass();
+            distance++;
+            if (compared == Object.class) {
+                break;
             }
         }
         return distance;
@@ -129,11 +130,27 @@ public final class EasyMockAnnotationReflectionUtils {
     public static List<Type> getGenericParameters(Field field) {
         List<Type> genericParameters = new LinkedList<Type>();
         Type genericType = field.getGenericType();
+
         if (genericType instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) genericType;
             genericParameters.addAll(Arrays.asList(parameterizedType.getActualTypeArguments()));
         }
+
         return genericParameters;
+    }
+
+    public static class UnableToWriteFieldException extends EasyMockAnnotationReflectionException {
+
+        public UnableToWriteFieldException(Field field, Throwable cause) {
+            super(String.format("Cannot set value of field '%s'", field), cause);
+        }
+    }
+
+    public static class UnableToReadFieldException extends EasyMockAnnotationReflectionException {
+
+        public UnableToReadFieldException(Field field, Throwable cause) {
+            super(String.format("Cannot get value of field '%s'", field), cause);
+        }
     }
 
     private EasyMockAnnotationReflectionUtils() {
