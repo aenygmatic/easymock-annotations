@@ -45,3 +45,30 @@ public class TestedObjectTest {
     ...
 }
 ```
+
+Multiple controls can be used for grouping mocks:
+
+```java
+public class TestedObjectTest {
+
+    @MockControl
+    private IMocksControl control
+    @MockControl
+    private IMocksControl otherControl
+
+    @Mock(control = "control")
+    private Component component;
+    @Mock(control = "otherControl")
+    private OtherComponent otherComponent;
+    
+    @Injected
+    private TestedObject underTest;
+
+    @Before
+    public void setUp() {
+        EasyMockAnnotations.initializeWithMockControl(this);
+    }
+    
+    ...
+}
+```
