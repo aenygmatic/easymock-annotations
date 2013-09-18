@@ -13,7 +13,7 @@ import org.easymock.MockType;
  *
  * @author Balazs Berkes
  */
-@Target({ElementType.FIELD})
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MockControl {
 

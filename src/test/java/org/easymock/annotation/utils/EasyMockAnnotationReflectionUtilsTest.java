@@ -18,7 +18,7 @@ import org.junit.Test;
 public class EasyMockAnnotationReflectionUtilsTest {
 
     private Field field;
-    private Object target;
+    private Object instance;
     private Class<?> clazz;
     public Map<Integer, String> fieldWithGenericParams;
 
@@ -29,27 +29,27 @@ public class EasyMockAnnotationReflectionUtilsTest {
 
     @Test
     public void testGetInheritanceDistanceShouldReturnZeroWhenClassIsNotSuperclass() {
-        givenInstanceAndClassOf(new Clazz(), Clazz.class);
+        givenInstanceAndClass(new Clazz(), Clazz.class);
 
-        int inheritanceDistance = EasyMockAnnotationReflectionUtils.getInheritanceDistance(target, clazz);
+        int inheritanceDistance = EasyMockAnnotationReflectionUtils.getInheritanceDistance(instance, clazz);
 
         assertEquals(0, inheritanceDistance);
     }
 
     @Test
     public void testGetInheritanceDistanceShouldReturnDistanceWhenClassSuperclass() {
-        givenInstanceAndClassOf(new SubClass(), SuperClass.class);
+        givenInstanceAndClass(new SubClass(), SuperClass.class);
 
-        int inheritanceDistance = EasyMockAnnotationReflectionUtils.getInheritanceDistance(target, clazz);
+        int inheritanceDistance = EasyMockAnnotationReflectionUtils.getInheritanceDistance(instance, clazz);
 
         assertEquals(2, inheritanceDistance);
     }
 
     @Test
     public void testGetInheritanceDistanceShouldReturnDistanceToObjectWhenTargetIsNotRelated() {
-        givenInstanceAndClassOf(new SubClass(), StringBuilder.class);
+        givenInstanceAndClass(new SubClass(), StringBuilder.class);
 
-        int inheritanceDistance = EasyMockAnnotationReflectionUtils.getInheritanceDistance(target, clazz);
+        int inheritanceDistance = EasyMockAnnotationReflectionUtils.getInheritanceDistance(instance, clazz);
 
         assertEquals(-1, inheritanceDistance);
     }
@@ -58,7 +58,7 @@ public class EasyMockAnnotationReflectionUtilsTest {
     public void testGetAllFieldShouldReturnAllFieldsUpToObject() {
         givenClassOf(SubClass.class);
 
-        List<Field> allFields = EasyMockAnnotationReflectionUtils.getAllFields(SubClass.class);
+        List<Field> allFields = EasyMockAnnotationReflectionUtils.getAllFields(clazz);
 
         assertEquals(3, allFields.size());
     }
@@ -74,13 +74,13 @@ public class EasyMockAnnotationReflectionUtilsTest {
     }
 
     private void cleanUpFields() {
-        target = null;
+        instance = null;
         clazz = null;
         field = null;
     }
 
-    private void givenInstanceAndClassOf(Object target, Class<?> clazz) {
-        this.target = target;
+    private void givenInstanceAndClass(Object instance, Class<?> clazz) {
+        this.instance = instance;
         this.clazz = clazz;
     }
 

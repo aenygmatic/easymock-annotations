@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
  *
  * @author Balazs Berkes
  */
-@Target({ElementType.FIELD})
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Injected {
 }

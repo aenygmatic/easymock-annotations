@@ -13,7 +13,7 @@ import org.easymock.MockType;
  *
  * @author Balazs Berkes
  */
-@Target({ElementType.FIELD})
+@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Mock {
 
@@ -31,4 +31,13 @@ public @interface Mock {
      * @return the name of the mock object.
      */
     String name() default "";
+
+    /**
+     * Name of the associated {@link org.easymock.IMocksControl IMocksControl}.
+     * It has effect only when mocks are created via {@link EasyMockAnnotations#initializeWithMockControl(Object)}.
+     * <p>
+     * @return name of the {@code IMocksControl}
+     */
+    String control() default "";
+
 }

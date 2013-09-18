@@ -5,29 +5,31 @@ import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.ge
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.setField;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
 import org.easymock.IMocksControl;
 import org.easymock.MockType;
 import org.easymock.TestSubject;
 
 import org.easymock.annotation.exception.EasyMockAnnotationInitializationException;
-import org.easymock.annotation.exception.EasyMockAnnotationReflectionException;
 import org.easymock.annotation.internal.ClassInitializer;
 import org.easymock.annotation.internal.ControlledMockFactory;
 import org.easymock.annotation.internal.EasyMockSupportMockFactory;
+import org.easymock.annotation.internal.IMockControlFactory;
 import org.easymock.annotation.internal.MockFactory;
 import org.easymock.annotation.internal.MockHolder;
 import org.easymock.annotation.internal.MockInjector;
 import org.easymock.annotation.internal.StaricMockFactory;
+import org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.UnableToWriteFieldException;
 
 /**
  * Initialize the testclass. Scans for the {@link Mock @Mock}, {@link MockControl @MockControl} and
  * {@link Injected @Injected} annotations.
- *
+ * <p>
  * @author Balazs Berkes
  */
 public class EasyMockAnnotations {
@@ -45,21 +47,28 @@ public class EasyMockAnnotations {
      * <pre>
      *     &#064;Before
      *     public void setUp() {
-     *         IMocksControl control = EasyMockAnnotations.initializeWithMockControl(this);
+     *         EasyMockAnnotations.initializeWithMockControl(this);
      *     }
      * </pre>
      *
      * @param testclass the testclass
-     * @return the {@code IMocksControl}
      */
-    public static IMocksControl initializeWithMockControl(Object testclass) {
-        IMocksControl control = injectMockControl(testclass);
-        List<MockHolder> mocks = processEasyMockAnnotations(testclass, new ControlledMockFactory(control));
+    public static void initializeWithMockControl(Object testclass) {
+        List<MockControlHolder> mockControls = injectMockControl(testclass);
+        Map<String, MockFactory> controls = mapMockControlHolders(mockControls);
+        List<MockHolder> mocks = processEasyMockAnnotations(testclass, controls);
         Object testedObject = initializeTestedClass(testclass, mocks);
         if (testedObject != null) {
             injectToTestedClass(testedObject, mocks);
         }
-        return control;
+    }
+
+    private static Map<String, MockFactory> mapMockControlHolders(List<MockControlHolder> mockControls) {
+        Map<String, MockFactory> controls = new HashMap<String, MockFactory>();
+        for (MockControlHolder holder : mockControls) {
+            controls.put(holder.getName(), new ControlledMockFactory(holder.getMocksControl()));
+        }
+        return controls;
     }
 
     /**
@@ -87,37 +96,44 @@ public class EasyMockAnnotations {
         } else {
             mockFactory = new StaricMockFactory();
         }
-        List<MockHolder> mocks = processEasyMockAnnotations(testclass, mockFactory);
+        Map<String, MockFactory> factories = new HashMap<String, MockFactory>();
+        factories.put(null, mockFactory);
+        List<MockHolder> mocks = processEasyMockAnnotations(testclass, factories);
         Object testedObject = initializeTestedClass(testclass, mocks);
         if (testedObject != null) {
             injectToTestedClass(testedObject, mocks);
         }
     }
 
-    private static Class<? extends Object> getClassOfTest(Object testclass) throws RuntimeException {
+    private static Class<?> getClassOfTest(Object testclass) throws RuntimeException {
         if (testclass == null) {
             throw new RuntimeException("Test class cannot be null!");
         }
         return testclass.getClass();
     }
 
-    private static IMocksControl injectMockControl(Object testclass) {
-        IMocksControl control = null;
+    private static List<MockControlHolder> injectMockControl(Object testclass) {
+        List<MockControlHolder> contols = new LinkedList<MockControlHolder>();
+
         for (Field field : testclass.getClass().getDeclaredFields()) {
+            IMocksControl control;
             MockControl annotation = field.getAnnotation(MockControl.class);
             if (annotation != null) {
-                control = createControl(annotation.value());
+                final IMockControlFactory controlFactory = IMockControlFactory.getSingleton();
+                control = controlFactory.createControl(annotation.value());
+                String name = field.getName();
                 try {
                     setField(field, testclass, control);
-                } catch (EasyMockAnnotationReflectionException ex) {
+                    MockControlHolder holder = new MockControlHolder();
+                    holder.setMocksControl(control);
+                    holder.setName(name);
+                    contols.add(holder);
+                } catch (UnableToWriteFieldException ex) {
                     throw new EasyMockAnnotationInitializationException("Field annotated with @MockControl must be type implements org.easymock.IMocksControl!", ex);
                 }
             }
         }
-        if (control == null) {
-            control = EasyMock.createControl();
-        }
-        return control;
+        return contols;
     }
 
     private static Object initializeTestedClass(Object testclass, List<MockHolder> mocks) {
@@ -142,18 +158,20 @@ public class EasyMockAnnotations {
         return testedClass;
     }
 
-    private static List<MockHolder> processEasyMockAnnotations(Object testclass, MockFactory mockFactory) {
+    private static List<MockHolder> processEasyMockAnnotations(Object testclass, Map<String, MockFactory> factories) {
         Class<? extends Object> clazz = getClassOfTest(testclass);
+        MockFactory defaultControl = factories.values().iterator().next();
         List<MockHolder> mocks = new LinkedList<MockHolder>();
         for (Field field : getAllFields(clazz)) {
             Mock annotation = field.getAnnotation(Mock.class);
             if (annotation != null) {
+                MockFactory mockFactory = factories.containsKey(annotation.control()) ? factories.get(annotation.control()) : defaultControl;
                 Object mockedObject = mockIt(field, annotation.name(), annotation.value(), mockFactory, mocks);
                 setField(field, testclass, mockedObject);
             } else {
                 org.easymock.Mock easyMockAnnotation = field.getAnnotation(org.easymock.Mock.class);
                 if (easyMockAnnotation != null) {
-                    Object mockedObject = mockIt(field, easyMockAnnotation.name(), easyMockAnnotation.type(), mockFactory, mocks);
+                    Object mockedObject = mockIt(field, easyMockAnnotation.name(), easyMockAnnotation.type(), defaultControl, mocks);
                     setField(field, testclass, mockedObject);
                 }
             }
@@ -201,22 +219,28 @@ public class EasyMockAnnotations {
         return testedClass;
     }
 
-    private static IMocksControl createControl(MockType value) {
-        IMocksControl control;
-        switch (value) {
-            case NICE:
-                control = EasyMock.createNiceControl();
-                break;
-            case STRICT:
-                control = EasyMock.createStrictControl();
-                break;
-            case DEFAULT:
-            default:
-                control = EasyMock.createControl();
-        }
-        return control;
+    private EasyMockAnnotations() {
     }
 
-    private EasyMockAnnotations() {
+    private static class MockControlHolder {
+
+        private IMocksControl mocksControl;
+        private String name;
+
+        public IMocksControl getMocksControl() {
+            return mocksControl;
+        }
+
+        public void setMocksControl(IMocksControl mocksControl) {
+            this.mocksControl = mocksControl;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 }

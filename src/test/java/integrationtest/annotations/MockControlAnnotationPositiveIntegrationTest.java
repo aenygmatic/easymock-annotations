@@ -14,7 +14,7 @@ import org.easymock.annotation.MockControl;
 /**
  * Integration test for {@link MockControl @MockContol} creation and type parameters.
  * <p>
- * @author Balázs
+ * @author Balazs Berkes
  */
 public class MockControlAnnotationPositiveIntegrationTest {
 
@@ -49,12 +49,6 @@ public class MockControlAnnotationPositiveIntegrationTest {
     public void testiInitializeWithMockControlShouldCreateDefaultMockWhenNoParameterIsGiven() {
         EasyMockAnnotations.initializeWithMockControl(this);
         assertEquals(MockType.DEFAULT, getMockType(control));
-    }
-
-    @Test
-    public void testiInitializeWithMockControlShouldReturnTheSameControlAsItInjects() {
-        IMocksControl returned = EasyMockAnnotations.initializeWithMockControl(this);
-        assertEquals(control, returned);
     }
 
     private MockType getMockType(Object control) {
