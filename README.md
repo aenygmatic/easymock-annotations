@@ -13,7 +13,6 @@ Following annotations are supported.
 - @MockControl
   - Field annotated with @MockControl all the mock will be created by the IMockControl which will be injected into the field.
   - org.easymock.MockType is supported for this annotation
-  - For this annotation EasyMockAnnotations.initializeWithMockControl(this); should be used.
 
   
 - @Injected (org.easymock.TestSubject is also supported)
@@ -66,7 +65,7 @@ public class TestedObjectTest {
 
     @Before
     public void setUp() {
-        EasyMockAnnotations.initializeWithMockControl(this);
+        EasyMockAnnotations.initialize(this);
     }
     
     ...
