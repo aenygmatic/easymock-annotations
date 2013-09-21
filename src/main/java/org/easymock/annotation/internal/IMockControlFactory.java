@@ -11,13 +11,13 @@ import org.easymock.MockType;
  */
 public class IMockControlFactory {
 
-    private static IMockControlFactory SINGLETON;
+    private static IMockControlFactory singleton;
 
     public static synchronized IMockControlFactory getSingleton() {
-        if (SINGLETON == null) {
-            SINGLETON = new IMockControlFactory();
+        if (singleton == null) {
+            singleton = new IMockControlFactory();
         }
-        return SINGLETON;
+        return singleton;
     }
 
     /**

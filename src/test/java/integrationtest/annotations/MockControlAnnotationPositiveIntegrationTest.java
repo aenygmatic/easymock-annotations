@@ -29,25 +29,25 @@ public class MockControlAnnotationPositiveIntegrationTest {
 
     @Test
     public void testiInitializeWithMockControlShouldCreateDefaultMock() {
-        EasyMockAnnotations.initializeWithMockControl(this);
+        EasyMockAnnotations.initialize(this);
         assertEquals(MockType.DEFAULT, getMockType(defaultControl));
     }
 
     @Test
     public void testiInitializeWithMockControlShouldCreateNiceMock() {
-        EasyMockAnnotations.initializeWithMockControl(this);
+        EasyMockAnnotations.initialize(this);
         assertEquals(MockType.NICE, getMockType(niceControl));
     }
 
     @Test
     public void testiInitializeWithMockControlShouldCreateStrictMock() {
-        EasyMockAnnotations.initializeWithMockControl(this);
+        EasyMockAnnotations.initialize(this);
         assertEquals(MockType.STRICT, getMockType(strictControl));
     }
 
     @Test
     public void testiInitializeWithMockControlShouldCreateDefaultMockWhenNoParameterIsGiven() {
-        EasyMockAnnotations.initializeWithMockControl(this);
+        EasyMockAnnotations.initialize(this);
         assertEquals(MockType.DEFAULT, getMockType(control));
     }
 

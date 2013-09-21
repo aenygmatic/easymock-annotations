@@ -33,7 +33,7 @@ public class MockControlMultipleAnnotationIntegrationTest {
 
     @Before
     public void setUp() {
-        EasyMockAnnotations.initializeWithMockControl(this);
+        EasyMockAnnotations.initialize(this);
     }
 
     @Test

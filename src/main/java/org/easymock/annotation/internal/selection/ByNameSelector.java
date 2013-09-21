@@ -17,10 +17,19 @@ public class ByNameSelector implements MockSelector<String> {
     public static final SelectionStrategy NAME_EQUALS_IGNORE_CASE_STRATEGY = new NameEqualsIgnoreCaseStrategy();
     public static final SelectionStrategy NAME_CONTAINS_STRATEGY = new NameContainsStrategy();
 
-    private static List<SelectionStrategy> STRATEGIES = Arrays.asList(NAME_EQUALS_STRATEGY, NAME_EQUALS_IGNORE_CASE_STRATEGY, NAME_CONTAINS_STRATEGY);
+    private static MockSelector<String> singleton;
 
-    public static void overrideStategy(SelectionStrategy... stategies) {
-        STRATEGIES = Arrays.asList(stategies);
+    private static List<SelectionStrategy> strategies = Arrays.asList(NAME_EQUALS_STRATEGY, NAME_EQUALS_IGNORE_CASE_STRATEGY, NAME_CONTAINS_STRATEGY);
+
+    public static void overrideStrategy(SelectionStrategy... strategies) {
+        ByNameSelector.strategies = Arrays.asList(strategies);
+    }
+
+    public static synchronized MockSelector<String> getSingleton() {
+        if (singleton == null) {
+            singleton = new ByNameSelector();
+        }
+        return singleton;
     }
 
     /**
@@ -44,7 +53,7 @@ public class ByNameSelector implements MockSelector<String> {
         List<MockHolder> matchingMocks = new LinkedList<MockHolder>();
         MockHolder matchingMock = null;
 
-        int highestPriority = STRATEGIES.size() + 1;
+        int highestPriority = strategies.size() + 1;
         for (MockHolder mock : mocks) {
             int currentPrio = getPriorityLevel(targetName, mock);
             if (currentPrio < highestPriority) {
@@ -59,8 +68,8 @@ public class ByNameSelector implements MockSelector<String> {
 
     private int getPriorityLevel(String targetName, MockHolder mock) {
         int currentPrio = 0;
-        for (SelectionStrategy stategy : STRATEGIES) {
-            if (stategy.isMatching(targetName, mock.getSourceName())) {
+        for (SelectionStrategy strategy : strategies) {
+            if (strategy.isMatching(targetName, mock.getSourceName())) {
                 break;
             }
             currentPrio++;

@@ -16,6 +16,15 @@ import org.easymock.annotation.internal.MockHolder;
  */
 public class ByGenericSelector implements MockSelector<Field> {
 
+    private static MockSelector<Field> singleton;
+
+    public static synchronized MockSelector<Field> getSingleton() {
+        if (singleton == null) {
+            singleton = new ByGenericSelector();
+        }
+        return singleton;
+    }
+
     /**
      * Selects the mocks which has the same generic parameter as the target field.
      * This method assumes that the given lost of mock contains only instances of the target field.

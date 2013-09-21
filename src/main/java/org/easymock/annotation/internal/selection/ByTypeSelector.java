@@ -15,6 +15,14 @@ import org.easymock.annotation.internal.MockHolder;
 public class ByTypeSelector implements MockSelector<Class<?>> {
 
     private static final int MAX_DEPTH = Integer.MAX_VALUE;
+    private static MockSelector<Class<?>> singleton;
+
+    public static synchronized MockSelector<Class<?>> getSingleton() {
+        if (singleton == null) {
+            singleton = new ByTypeSelector();
+        }
+        return singleton;
+    }
 
     @Override
     public List<MockHolder> getMatchingMocks(Class<?> selection, List<MockHolder> mocks) {

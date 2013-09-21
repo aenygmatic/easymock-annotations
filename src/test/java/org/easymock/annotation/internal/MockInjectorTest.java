@@ -38,7 +38,6 @@ public class MockInjectorTest {
     @Before
     public void setUp() {
         initializeTestComponents();
-        underTest = new MockInjector();
     }
 
     @Test
@@ -101,7 +100,7 @@ public class MockInjectorTest {
             m.setSourceField(getFieldNameOf(mock));
             this.mocks.add(m);
         }
-        underTest.addMocks(this.mocks);
+        underTest = new MockInjector(this.mocks);
     }
 
     private void givenTestedClassWithInterfaceField() {

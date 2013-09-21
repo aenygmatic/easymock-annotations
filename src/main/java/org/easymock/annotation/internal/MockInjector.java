@@ -4,13 +4,13 @@ import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.ge
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.setField;
 
 import java.lang.reflect.Field;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.easymock.annotation.exception.EasyMockAnnotationReflectionException;
 import org.easymock.annotation.internal.selection.ByGenericSelector;
 import org.easymock.annotation.internal.selection.ByNameSelector;
 import org.easymock.annotation.internal.selection.ByTypeSelector;
+import org.easymock.annotation.internal.selection.MockSelector;
 
 /**
  * Injects the the given mocks into the target class. Mocks are injected by type and name.
@@ -19,20 +19,13 @@ import org.easymock.annotation.internal.selection.ByTypeSelector;
  */
 public class MockInjector {
 
+    private MockSelector<String> byNameSelector = ByNameSelector.getSingleton();
+    private MockSelector<Class<?>> byTypeSelector = ByTypeSelector.getSingleton();
+    private MockSelector<Field> byGenericSelector = ByGenericSelector.getSingleton();
     private List<MockHolder> mocks;
-    private ByNameSelector byNameSelector = new ByNameSelector();
-    private ByTypeSelector byTypeSelector = new ByTypeSelector();
-    private ByGenericSelector byGenericSelector = new ByGenericSelector();
 
-    /**
-     * Injects the given mock into the tested object.
-     * <p>
-     * @param mocks mocks to inject
-     * @return instance of this {@code MockInjector}.
-     */
-    public MockInjector addMocks(List<MockHolder> mocks) {
-        this.mocks = new LinkedList<MockHolder>(mocks);
-        return this;
+    public MockInjector(List<MockHolder> mocks) {
+        this.mocks = mocks;
     }
 
     /**

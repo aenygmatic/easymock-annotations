@@ -21,7 +21,7 @@ public class MockControlAnnotationNegativeIntegrationTest {
     public void testInitializeShouldThrowExceptinWhenControlTypeIsIncorrect() {
         //GIVEN incorrect field annotated with @MockControl
         //WHEN
-        EasyMockAnnotations.initializeWithMockControl(this);
+        EasyMockAnnotations.initialize(this);
         //THEN exception should be thrown
     }
 }
