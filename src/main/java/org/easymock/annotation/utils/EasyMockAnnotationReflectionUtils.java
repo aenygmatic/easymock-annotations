@@ -3,6 +3,7 @@ package org.easymock.annotation.utils;
 import static java.lang.reflect.Modifier.isFinal;
 import static java.lang.reflect.Modifier.isStatic;
 
+import static org.easymock.annotation.utils.EasyMockAnnotationValidationUtils.notNull;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -13,7 +14,7 @@ import java.util.List;
 import org.easymock.annotation.exception.EasyMockAnnotationReflectionException;
 
 /**
- * Untility class for reflection based operations.
+ * Utility class for reflection based operations.
  * <p>
  * @author Balazs Berkes
  */
@@ -49,7 +50,7 @@ public final class EasyMockAnnotationReflectionUtils {
     /**
      * Get the value of the field in the given object.
      * <p>
-     * @param field whiches value will be returned
+     * @param field which value will be returned
      * @param target the target object which contains the field
      * @return the value of the field
      * <p>
@@ -58,20 +59,19 @@ public final class EasyMockAnnotationReflectionUtils {
      */
     public static Object getField(Field field, Object target) throws UnableToReadFieldException {
         Object fieldValue = null;
-        if (!isStatic(field.getModifiers()) && !isFinal(field.getModifiers())) {
-            fieldValue = doGetField(field, fieldValue, target);
+        if (notNull(target)) {
+            fieldValue = doGetField(field, target);
         }
         return fieldValue;
     }
 
-    private static Object doGetField(Field field, Object fieldValue, Object target) throws UnableToReadFieldException, SecurityException {
+    private static Object doGetField(Field field, Object target) throws UnableToReadFieldException, SecurityException {
         field.setAccessible(true);
         try {
-            fieldValue = field.get(target);
+            return field.get(target);
         } catch (Exception ex) {
             throw new UnableToReadFieldException(field, ex);
         }
-        return fieldValue;
     }
 
     /**
@@ -79,7 +79,7 @@ public final class EasyMockAnnotationReflectionUtils {
      * inheritance tree.
      * <p>
      * @param object the root object
-     * @param clazz the class to deterime the distance to
+     * @param clazz the class to determine the distance to
      * @return the distance of the object to the class. If the object is not an
      * instance of the class {@code -1} will return.
      */
@@ -109,7 +109,7 @@ public final class EasyMockAnnotationReflectionUtils {
      * @param clazz first level class to scan
      * @return {@code List<Field>} of the class and all it predecessors
      */
-    public static List<Field> getAllFields(Class<?> clazz) {
+    public static List<Field> getAllDeclaredFields(Class<?> clazz) {
         List<Field> fields = new LinkedList<Field>();
         Class<?> predecessor = clazz;
 

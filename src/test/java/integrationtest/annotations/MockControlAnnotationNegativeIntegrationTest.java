@@ -18,10 +18,7 @@ public class MockControlAnnotationNegativeIntegrationTest {
     private Thread incorrectType;
 
     @Test(expected = EasyMockAnnotationInitializationException.class)
-    public void testInitializeShouldThrowExceptinWhenControlTypeIsIncorrect() {
-        //GIVEN incorrect field annotated with @MockControl
-        //WHEN
+    public void testInitializeShouldThrowExceptionWhenControlTypeIsIncorrect() {
         EasyMockAnnotations.initialize(this);
-        //THEN exception should be thrown
     }
 }

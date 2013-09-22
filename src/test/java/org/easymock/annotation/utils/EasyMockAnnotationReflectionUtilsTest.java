@@ -55,10 +55,10 @@ public class EasyMockAnnotationReflectionUtilsTest {
     }
 
     @Test
-    public void testGetAllFieldShouldReturnAllFieldsUpToObject() {
+    public void testGetAllDeclaredFieldShouldReturnAllFieldsUpToObject() {
         givenClassOf(SubClass.class);
 
-        List<Field> allFields = EasyMockAnnotationReflectionUtils.getAllFields(clazz);
+        List<Field> allFields = EasyMockAnnotationReflectionUtils.getAllDeclaredFields(clazz);
 
         assertEquals(3, allFields.size());
     }

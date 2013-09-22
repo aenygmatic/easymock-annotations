@@ -1,9 +1,5 @@
 package org.easymock.annotation.internal;
 
-import static org.easymock.MockType.DEFAULT;
-import static org.easymock.MockType.NICE;
-import static org.easymock.MockType.STRICT;
-
 import org.easymock.EasyMockSupport;
 import org.easymock.MockType;
 

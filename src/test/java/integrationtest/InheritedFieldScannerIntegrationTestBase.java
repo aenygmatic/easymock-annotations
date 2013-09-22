@@ -6,8 +6,8 @@ import integrationtest.support.FirstLevelClass;
 import integrationtest.support.SecondLevelClassA;
 
 /**
- * Integeration test for {@link EasyMockAnnotations#initializeWithMockControl(Object)}.
- * It should inject the all fields including the inherited ones.
+ * Integration test for {@link EasyMockAnnotations#initialize(Object)}.
+ * It contains annotated fields which will be scanned from subclass.
  * <p>
  * @author Balazs Berkes
  */

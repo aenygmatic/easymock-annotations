@@ -1,9 +1,5 @@
 package org.easymock.annotation.internal;
 
-import static org.easymock.MockType.DEFAULT;
-import static org.easymock.MockType.NICE;
-import static org.easymock.MockType.STRICT;
-
 import org.easymock.EasyMock;
 import org.easymock.MockType;
 
@@ -12,7 +8,7 @@ import org.easymock.MockType;
  *
  * @author Balazs Berkes
  */
-public class StaricMockFactory implements MockFactory {
+public class StaticMockFactory implements MockFactory {
 
     @Override
     public <T> T createMock(Class<T> clazz, MockType type) {

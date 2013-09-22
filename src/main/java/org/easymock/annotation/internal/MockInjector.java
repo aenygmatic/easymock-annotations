@@ -1,6 +1,6 @@
 package org.easymock.annotation.internal;
 
-import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getAllFields;
+import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getAllDeclaredFields;
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.setField;
 
 import java.lang.reflect.Field;
@@ -35,7 +35,7 @@ public class MockInjector {
      * @return the target object
      */
     public Object injectTo(Object target) {
-        for (Field field : getAllFields(target.getClass())) {
+        for (Field field : getAllDeclaredFields(target.getClass())) {
             injectField(field, target);
         }
         return target;

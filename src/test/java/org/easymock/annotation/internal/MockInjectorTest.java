@@ -84,7 +84,7 @@ public class MockInjectorTest {
     @Test
     public void testInjectMocksShouldInjectInheritedFields() {
         givenMocks(superClass, clazz, subClass);
-        givenTestedClassWithInherite4dFields();
+        givenTestedClassWithInheritedFields();
 
         underTest.injectTo(classWithInheritedFields);
 
@@ -107,7 +107,7 @@ public class MockInjectorTest {
         classWithInterfaceField = new TestedClassWithInterfaceField();
     }
 
-    private void givenTestedClassWithInherite4dFields() {
+    private void givenTestedClassWithInheritedFields() {
         classWithInheritedFields = new TestedClassWithInheritedFields();
     }
 

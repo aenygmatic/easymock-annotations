@@ -36,7 +36,7 @@ public class ByNameSelectorTest {
     }
 
     @Test
-    public void testGetMatchingMockDefaultStategyShouldSelectEqualName() {
+    public void testGetMatchingMockDefaultStrategyShouldSelectEqualName() {
         givenMockHolderFields();
 
         List<MockHolder> actual = underTest.getMatchingMocks("mockHoder", mocks);
@@ -45,7 +45,7 @@ public class ByNameSelectorTest {
     }
 
     @Test
-    public void testGetMatchingMockDefaultStategyShouldSelectEqualIgnoreCaseName() {
+    public void testGetMatchingMockDefaultStrategyShouldSelectEqualIgnoreCaseName() {
         givenMockHolderFields();
 
         List<MockHolder> actual = underTest.getMatchingMocks("lowerCaseMock", mocks);
@@ -54,7 +54,7 @@ public class ByNameSelectorTest {
     }
 
     @Test
-    public void testGetMatchingMockDefaultStategyShouldSelectMockHolderWhenItsNameContainedInFieldsName() {
+    public void testGetMatchingMockDefaultStrategyShouldSelectMockHolderWhenItsNameContainedInFieldsName() {
         givenMockHolderFields();
 
         List<MockHolder> actual = underTest.getMatchingMocks("holderInName", mocks);
@@ -82,7 +82,7 @@ public class ByNameSelectorTest {
 
     private void givenMockHolderFields() {
         mocks = new LinkedList<MockHolder>();
-        expect(mockHolder.getSourceName()).andStubReturn("mockHoder");
+        expect(mockHolder.getSourceName()).andStubReturn("mockHolder");
         expect(holder.getSourceName()).andStubReturn("holder");
         expect(lowercasemock.getSourceName()).andStubReturn("lowercasemock");
         mocks.add(mockHolder);

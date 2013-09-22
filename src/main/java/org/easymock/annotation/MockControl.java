@@ -9,7 +9,7 @@ import org.easymock.MockType;
 
 /**
  * Fields annotated with {@code @MockControl} will be filled up with {@link org.easymock.IMocksControl IMocksControl}
- * object after the testclass is initialized by {@link EasyMockAnnotations#initializeWithMockControl(Object)}.
+ * object after the testclass is initialized by {@link EasyMockAnnotations#initialize(Object)}.
  *
  * @author Balazs Berkes
  */

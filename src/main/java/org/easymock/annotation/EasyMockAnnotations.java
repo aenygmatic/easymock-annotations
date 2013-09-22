@@ -1,6 +1,6 @@
 package org.easymock.annotation;
 
-import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getAllFields;
+import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getAllDeclaredFields;
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getField;
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.setField;
 import static org.easymock.annotation.utils.EasyMockAnnotationValidationUtils.assertNotNull;
@@ -42,7 +42,7 @@ public class EasyMockAnnotations {
      * Initialize all field annotated with {@link Mock @Mock}.
      * <p>
      * All the mocks are injected to field annotated with {@link Injected @Injected}. When the
-     * {@code Injected @Injected} field is not initalized a new instance will be created if it has default constructor.
+     * {@code Injected @Injected} field is not initialized a new instance will be created if it has default constructor.
      * <p>
      * Usage:
      * <pre>
@@ -66,7 +66,7 @@ public class EasyMockAnnotations {
     private static class EasyMockAnnotationsInitializer {
 
         private final IMockControlFactory controlFactory = IMockControlFactory.getSingleton();
-        private final NavigableMap<String, IMocksControl> namedContols = new TreeMap<String, IMocksControl>();
+        private final NavigableMap<String, IMocksControl> namedControls = new TreeMap<String, IMocksControl>();
         private final List<MockHolder> mocks = new LinkedList<MockHolder>();
         private final MockInjector mockInjector = new MockInjector(mocks);
 
@@ -80,7 +80,7 @@ public class EasyMockAnnotations {
         }
 
         private void initializeMockControls() {
-            for (Field field : testclass.getClass().getDeclaredFields()) {
+            for (Field field : getAllDeclaredFields(testclass.getClass())) {
                 if (field.isAnnotationPresent(MockControl.class)) {
                     createAndInjectControl(field);
                 }
@@ -94,18 +94,18 @@ public class EasyMockAnnotations {
             MockControl annotation = field.getAnnotation(MockControl.class);
             IMocksControl control = controlFactory.createControl(annotation.value());
             injectToTestclass(field, control);
-            namedContols.put(field.getName(), control);
+            namedControls.put(field.getName(), control);
         }
 
         private void initializeMocks() {
-            FallbackMockHolderFactory fallbackFactory = new FallbackMockHolderFactory(namedContols, testclass);
-            for (Field field : getAllFields(testclass.getClass())) {
+            FallbackMockHolderFactory fallbackFactory = new FallbackMockHolderFactory(namedControls, testclass);
+            for (Field field : getAllDeclaredFields(testclass.getClass())) {
                 createAndInjectMock(field, fallbackFactory);
             }
         }
 
         private void initializeTestedClass() {
-            for (Field field : getAllFields(testclass.getClass())) {
+            for (Field field : getAllDeclaredFields(testclass.getClass())) {
                 if (field.isAnnotationPresent(Injected.class) || field.isAnnotationPresent(TestSubject.class)) {
                     Object testedClass = createInstanceIfNull(field);
                     mockInjector.injectTo(testedClass);

@@ -33,18 +33,18 @@ public class ByNameSelector implements MockSelector<String> {
     }
 
     /**
-     * Selecta the matching mock from the given mocks according to the selection strategy.
+     * Select a the matching mock from the given mocks according to the selection strategy.
      * <p>
-     * Default stategy order
+     * Default strategy order
      * <ul>
      * <li>Equals</li>
      * <li>Equals ignore case</li>
-     * <li>One conatains the other</li>
+     * <li>One contains the other</li>
      * </ul>
      * <p>
      * @param targetName name of the field the mock will be injected
      * @param mocks list of {@link MockHolder} of the possible mock objects
-     * @return return one mock if it matches to the {@link SelectionStrategy SelectionStategies}. If
+     * @return return one mock if it matches to the {@link SelectionStrategy SelectionStrategies}. If
      * no match found the first element of the list will be returned. If the given list is empty or
      * {@code null} {@link MockHolder#emptyMock()} will be returned.
      */

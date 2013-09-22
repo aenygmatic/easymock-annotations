@@ -9,7 +9,7 @@ import org.easymock.MockType;
 
 /**
  * Fields annotated with {@code @Mock} will be filled up with mock object after the testclass is initialized by
- * {@link EasyMockAnnotations#initialize(Object)} or {@link EasyMockAnnotations#initializeWithMockControl(Object)}.
+ * {@link EasyMockAnnotations#initialize(Object)} or {@link EasyMockAnnotations#initialize(Object)}.
  *
  * @author Balazs Berkes
  */
@@ -34,7 +34,7 @@ public @interface Mock {
 
     /**
      * Name of the associated {@link org.easymock.IMocksControl IMocksControl}.
-     * It has effect only when mocks are created via {@link EasyMockAnnotations#initializeWithMockControl(Object)}.
+     * It has effect only when mocks are created via {@link EasyMockAnnotations#initialize(Object)}.
      * <p>
      * @return name of the {@code IMocksControl}
      */

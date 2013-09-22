@@ -5,10 +5,10 @@ import java.util.List;
 import org.easymock.annotation.internal.MockHolder;
 
 /**
- * Privides unifided interface for selecting mock according to specific rules.
+ * Provides unified interface for selecting mock according to specific rules.
  * <p>
  * @author Balazs Berkes
- * @param <T> type of object which the mock will be compated to
+ * @param <T> type of object which the mock will be compared to
  */
 public interface MockSelector<T> {
 

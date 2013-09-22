@@ -5,11 +5,11 @@ package integrationtest.support;
  * <p>
  * @author Balazs Berkes
  */
-public class ThridLevelClassA extends SecondLevelClassA {
+public class ThirdLevelClassA extends SecondLevelClassA {
 
-    private ThridLevelClassA thrirdField;
+    private ThirdLevelClassA thrirdField;
 
-    public ThridLevelClassA getThrirdField() {
+    public ThirdLevelClassA getThrirdField() {
         return thrirdField;
     }
 }

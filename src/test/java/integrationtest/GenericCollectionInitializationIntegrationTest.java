@@ -21,7 +21,8 @@ import org.easymock.annotation.Mock;
 import integrationtest.support.ComponentWithGenericFields;
 
 /**
- *
+ * Integration test for fields annotated with {@code @Mock} and with generic parameters.
+ * <p>
  * @author Balazs Berkes
  */
 public class GenericCollectionInitializationIntegrationTest {
@@ -43,11 +44,7 @@ public class GenericCollectionInitializationIntegrationTest {
     }
 
     @Test
-    public void testInitializeShouldCreateMockAndInjectThem() {
-        //GIVEN annotated fields in this class
-        //WHEN  setUp method is called
-        //AND   this method is called
-        //THEN
+    public void testInitializeShouldCreateMockAndInjectMocks() {
         assertNotNull(underTest.getList());
         assertNotNull(underTest.getMap());
         assertNotNull(underTest.getSet());
@@ -55,10 +52,6 @@ public class GenericCollectionInitializationIntegrationTest {
 
     @Test
     public void testInitializeShouldCreateMockAndWriteBackToTestClassFields() {
-        //GIVEN annotated fields in this class
-        //WHEN  setUp method is called
-        //AND   this method is called
-        //THEN
         assertNotNull(strings);
         assertNotNull(list);
         assertNotNull(map);
@@ -66,10 +59,6 @@ public class GenericCollectionInitializationIntegrationTest {
 
     @Test
     public void testInitializeShouldInjectSameMockToTestClassAndUnderTest() {
-        //GIVEN annotated fields in this class
-        //WHEN  setUp method is called
-        //AND   this method is called
-        //THEN
         assertEquals(strings, underTest.getSet());
         assertEquals(list, underTest.getList());
         assertEquals(map, underTest.getMap());
@@ -77,10 +66,6 @@ public class GenericCollectionInitializationIntegrationTest {
 
     @Test
     public void testInitializeShouldInejctMocksByGenericType() {
-        //GIVEN annotated fields in this class
-        //WHEN  setUp method is called
-        //AND   this method is called
-        //THEN
         assertEquals(strings, underTest.getSet());
         assertEquals(list, underTest.getList());
         assertEquals(map, underTest.getMap());
@@ -88,10 +73,6 @@ public class GenericCollectionInitializationIntegrationTest {
 
     @Test
     public void testInitializeShouldInejctMocksByGenericParameterWhenTheyHaveTheSameType() {
-        //GIVEN annotated fields in this class
-        //WHEN  setUp method is called
-        //AND   this method is called
-        //THEN
         assertEquals(objects, underTest.getObjectSet());
         assertEquals(strings, underTest.getSet());
     }

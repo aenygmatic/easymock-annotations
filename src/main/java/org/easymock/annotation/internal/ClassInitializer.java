@@ -14,13 +14,13 @@ import org.easymock.annotation.exception.EasyMockAnnotationInitializationExcepti
 public class ClassInitializer {
 
     /**
-     * Initialize an instance of the given class if it has default construtor.
+     * Initialize an instance of the given class if it has default constructors.
      * <p>
      * @param clazz class to be initialized
-     * @param mocks list of mocked object which can be used as consturctor parameter
-     * @return a new instancce of the given class.
+     * @param mocks list of mocked object which can be used as constructor parameter
+     * @return a new instance of the given class.
      * <p>
-     * @throws EasyMockAnnotationInitializationException when initailzation failed or no default constructor
+     * @throws EasyMockAnnotationInitializationException when initialization failed or no default constructor
      * found.
      */
     public Object initialize(Class<?> clazz, List<MockHolder> mocks) throws EasyMockAnnotationInitializationException {

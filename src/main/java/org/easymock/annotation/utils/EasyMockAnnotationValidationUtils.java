@@ -5,7 +5,7 @@ package org.easymock.annotation.utils;
  * <p>
  * @author Balazs Berkes
  */
-public class EasyMockAnnotationValidationUtils {
+public final class EasyMockAnnotationValidationUtils {
 
     public static boolean isNull(Object object) {
         return object == null;
@@ -25,4 +25,6 @@ public class EasyMockAnnotationValidationUtils {
         }
     }
 
+    private EasyMockAnnotationValidationUtils(){
+    }
 }

@@ -18,7 +18,7 @@ import org.easymock.annotation.internal.ControlledMockFactory;
 import org.easymock.annotation.internal.EasyMockSupportMockFactory;
 import org.easymock.annotation.internal.MockFactory;
 import org.easymock.annotation.internal.MockHolder;
-import org.easymock.annotation.internal.StaricMockFactory;
+import org.easymock.annotation.internal.StaticMockFactory;
 
 /**
  * Creates mock by according to the given rules.
@@ -127,7 +127,7 @@ public class FallbackMockHolderFactory {
             if (testclass instanceof EasyMockSupport) {
                 factory = new EasyMockSupportMockFactory((EasyMockSupport) testclass);
             } else {
-                factory = new StaricMockFactory();
+                factory = new StaticMockFactory();
             }
         }
 

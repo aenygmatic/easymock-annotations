@@ -7,10 +7,10 @@ package integrationtest.support;
  */
 public class FacadeWithNonRelatedComponents {
 
-    private ThridLevelClassA component1;
+    private ThirdLevelClassA component1;
     private IndependentObject component2;
 
-    public ThridLevelClassA getThirdLevelClassA() {
+    public ThirdLevelClassA getThirdLevelClassA() {
         return component1;
     }
 

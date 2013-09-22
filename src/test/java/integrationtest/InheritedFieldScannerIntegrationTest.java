@@ -2,16 +2,17 @@ package integrationtest;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import org.easymock.annotation.EasyMockAnnotations;
 import org.easymock.annotation.Injected;
 import org.easymock.annotation.Mock;
 
-import integrationtest.support.ThridLevelClassA;
+import integrationtest.support.ThirdLevelClassA;
 
 /**
- * Integeration test for {@link EasyMockAnnotations#initializeWithMockControl(Object)}.
+ * Integration test for {@link EasyMockAnnotations#initialize(Object)}.
  * It should inject the all fields including the inherited ones.
  * <p>
  * @author Balazs Berkes
@@ -19,23 +20,24 @@ import integrationtest.support.ThridLevelClassA;
 public class InheritedFieldScannerIntegrationTest extends InheritedFieldScannerIntegrationTestBase {
 
     @Mock
-    private ThridLevelClassA thridLevelClassA;
+    private ThirdLevelClassA thridLevelClassA;
 
     @Injected
-    private ThridLevelClassA underTest;
+    private ThirdLevelClassA underTest;
 
-    @Test
-    public void testInitializeShouldInjectAllFields() {
-        //GIVEN annotated fields in test class.
-        //WHEN
+    @Before
+    public void setUp() {
         EasyMockAnnotations.initialize(this);
-        //THEN
-        assertInheritedFieldsAreInjected();
     }
 
-    protected void assertInheritedFieldsAreInjected() {
+    @Test
+    public void testInitializeShouldInjectAllFieldsOfCurrentFields() {
+        assertEquals(thridLevelClassA, underTest.getThrirdField());
+    }
+
+    @Test
+    public void testInitializeShouldInjectAllFieldsOfInheritedFields() {
         assertEquals(firstLevelClass, underTest.getFirstField());
         assertEquals(secondLevelClassA, underTest.getSecondField());
-        assertEquals(thridLevelClassA, underTest.getThrirdField());
     }
 }
