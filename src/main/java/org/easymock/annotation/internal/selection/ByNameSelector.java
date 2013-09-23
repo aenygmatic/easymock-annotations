@@ -3,6 +3,7 @@ package org.easymock.annotation.internal.selection;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.easymock.annotation.internal.MockHolder;
 
@@ -17,12 +18,15 @@ public class ByNameSelector implements MockSelector<String> {
     public static final SelectionStrategy NAME_EQUALS_IGNORE_CASE_STRATEGY = new NameEqualsIgnoreCaseStrategy();
     public static final SelectionStrategy NAME_CONTAINS_STRATEGY = new NameContainsStrategy();
 
+    private final static List<SelectionStrategy> strategies = loadStrategies(NAME_EQUALS_STRATEGY, NAME_EQUALS_IGNORE_CASE_STRATEGY, NAME_CONTAINS_STRATEGY);
+
     private static MockSelector<String> singleton;
 
-    private static List<SelectionStrategy> strategies = Arrays.asList(NAME_EQUALS_STRATEGY, NAME_EQUALS_IGNORE_CASE_STRATEGY, NAME_CONTAINS_STRATEGY);
-
     public static void overrideStrategy(SelectionStrategy... strategies) {
-        ByNameSelector.strategies = Arrays.asList(strategies);
+        synchronized (ByNameSelector.strategies) {
+            ByNameSelector.strategies.clear();
+            ByNameSelector.strategies.addAll(Arrays.asList(strategies));
+        }
     }
 
     public static synchronized MockSelector<String> getSingleton() {
@@ -81,6 +85,10 @@ public class ByNameSelector implements MockSelector<String> {
         if (matchingMock != null) {
             matchingMocks.add(matchingMock);
         }
+    }
+
+    private static List<SelectionStrategy> loadStrategies(SelectionStrategy... selectionStrategies) {
+        return new CopyOnWriteArrayList<SelectionStrategy>(Arrays.asList(selectionStrategies));
     }
 
     public static interface SelectionStrategy {

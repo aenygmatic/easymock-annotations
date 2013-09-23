@@ -65,8 +65,9 @@ public class EasyMockAnnotations {
 
     private static class EasyMockAnnotationsInitializer {
 
-        private final IMockControlFactory controlFactory = IMockControlFactory.getSingleton();
         private final NavigableMap<String, IMocksControl> namedControls = new TreeMap<String, IMocksControl>();
+        private final IMockControlFactory controlFactory = IMockControlFactory.getSingleton();
+        private final ClassInitializer classInitializer = new ClassInitializer();
         private final List<MockHolder> mocks = new LinkedList<MockHolder>();
         private final MockInjector mockInjector = new MockInjector(mocks);
 
@@ -76,7 +77,7 @@ public class EasyMockAnnotations {
             this.testclass = testclass;
             initializeMockControls();
             initializeMocks();
-            initializeTestedClass();
+            initializeTestedClasses();
         }
 
         private void initializeMockControls() {
@@ -104,7 +105,7 @@ public class EasyMockAnnotations {
             }
         }
 
-        private void initializeTestedClass() {
+        private void initializeTestedClasses() {
             for (Field field : getAllDeclaredFields(testclass.getClass())) {
                 if (field.isAnnotationPresent(Injected.class) || field.isAnnotationPresent(TestSubject.class)) {
                     Object testedClass = createInstanceIfNull(field);
@@ -116,7 +117,7 @@ public class EasyMockAnnotations {
         private Object createInstanceIfNull(Field field) {
             Object testedClass = getField(field, testclass);
             if (isNull(testedClass)) {
-                testedClass = new ClassInitializer().initialize(field.getType(), mocks);
+                testedClass = classInitializer.initialize(field.getType(), mocks);
                 injectToTestclass(field, testedClass);
             }
             return testedClass;
