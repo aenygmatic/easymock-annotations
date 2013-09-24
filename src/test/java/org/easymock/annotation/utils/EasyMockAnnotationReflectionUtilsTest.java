@@ -1,6 +1,9 @@
 package org.easymock.annotation.utils;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -9,6 +12,8 @@ import java.util.Map;
 
 import org.junit.After;
 import org.junit.Test;
+
+import org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.UnableToWriteFieldException;
 
 /**
  * Unit test for {@link EasyMockAnnotationReflectionUtils}.
@@ -20,7 +25,10 @@ public class EasyMockAnnotationReflectionUtilsTest {
     private Field field;
     private Object instance;
     private Class<?> clazz;
-    public Map<Integer, String> fieldWithGenericParams;
+    private StringBuilder stringBuilder;
+    private Map<Integer, String> fieldWithGenericParams;
+    private final Object finalInstance = new Object();
+    private static Object staticInstance = new Object();
 
     @After
     public void tearDown() {
@@ -73,10 +81,73 @@ public class EasyMockAnnotationReflectionUtilsTest {
         assertEquals(String.class, genericParameters.get(1));
     }
 
+    @Test
+    public void testSetFieldShouldSetField() throws Exception {
+        givenField("instance");
+        Object value = new Object();
+
+        EasyMockAnnotationReflectionUtils.setField(field, this, value);
+
+        assertEquals(value, field.get(this));
+    }
+
+    @Test
+    public void testSetFieldShouldNotSetFieldWhenValueIsNull() throws Exception {
+        givenField("instance");
+        instance = new Object();
+
+        EasyMockAnnotationReflectionUtils.setField(field, this, null);
+
+        assertNotNull(instance);
+    }
+
+    @Test
+    public void testSetFieldShouldNotSetFieldWhenItsFinal() throws Exception {
+        givenField("finalInstance");
+        instance = new Object();
+
+        EasyMockAnnotationReflectionUtils.setField(field, this, instance);
+
+        assertNotEquals(instance, field.get(this));
+    }
+
+    @Test
+    public void testSetFieldShouldNotSetFieldWhenItsStatic() throws Exception {
+        givenField("staticInstance");
+        instance = new Object();
+
+        EasyMockAnnotationReflectionUtils.setField(field, this, instance);
+
+        assertNotEquals(instance, field.get(this));
+    }
+
+    @Test(expected = UnableToWriteFieldException.class)
+    public void testSetFieldShouldThrowExceptionWhenCannotSet() throws Exception {
+        givenField("stringBuilder");
+
+        EasyMockAnnotationReflectionUtils.setField(field, this, new Object());
+    }
+
+    @Test
+    public void testGetFieldShouldGetFieldValue() throws Exception {
+        givenField("stringBuilder");
+        stringBuilder = new StringBuilder();
+
+        Object fieldValue = EasyMockAnnotationReflectionUtils.getField(field, this);
+
+        assertEquals(stringBuilder, fieldValue);
+    }
+
+    @Test
+    public void testGetFieldShouldReturnNullWhenTargetObjectIsNull() throws Exception {
+        assertNull(EasyMockAnnotationReflectionUtils.getField(field, null));
+    }
+
     private void cleanUpFields() {
         instance = null;
         clazz = null;
         field = null;
+        stringBuilder = null;
     }
 
     private void givenInstanceAndClass(Object instance, Class<?> clazz) {
@@ -89,7 +160,13 @@ public class EasyMockAnnotationReflectionUtilsTest {
     }
 
     private void givenField(String name) throws Exception {
-        this.field = this.getClass().getField(name);
+        for (Field field : this.getClass().getDeclaredFields()) {
+            if (field.getName().equals(name)) {
+                field.setAccessible(true);
+                this.field = field;
+                break;
+            }
+        }
     }
 }
 

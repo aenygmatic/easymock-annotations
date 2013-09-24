@@ -12,6 +12,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.easymock.annotation.exception.EasyMockAnnotationInitializationException;
+
 /**
  * Unit test for {@link ClassInitializer}.
  * <p>
@@ -92,6 +94,21 @@ public class ClassInitializerTest {
 
         assertEquals(string, actualClass.getString());
         assertNull(actualClass.getObject());
+    }
+
+    @Test(expected = EasyMockAnnotationInitializationException.class)
+    public void testInitializeShouldThrowExceptionWhenClassCannotBeInstantiated() {
+        givenClassToInitialize(ExceptionConstructor.class);
+
+        underTest.initialize(clazz, mocks);
+    }
+
+    @Test(expected = EasyMockAnnotationInitializationException.class)
+    public void testInitializeShouldThrowExceptionWhenNoConstructorCanBeFullyInjected() {
+        givenMocksToInject(object);
+        givenClassToInitialize(MultiParamConstructorWithMoreVersion.class);
+
+        underTest.initialize(clazz, mocks);
     }
 
     private void givenClassToInitialize(Class<?> clazz) {
@@ -186,6 +203,13 @@ public class ClassInitializerTest {
 
         public Object getObject() {
             return object;
+        }
+    }
+
+    public static class ExceptionConstructor {
+
+        public ExceptionConstructor() {
+            throw new RuntimeException();
         }
     }
 }
