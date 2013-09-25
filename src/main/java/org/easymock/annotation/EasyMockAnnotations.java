@@ -71,11 +71,13 @@ public class EasyMockAnnotations {
         private final List<MockHolder> mocks = new LinkedList<MockHolder>();
         private final MockInjector mockInjector = new MockInjector(mocks);
 
+        private FallbackMockHolderFactory fallbackFactory;
         private Object testclass;
 
         private void initialize(Object testclass) {
             this.testclass = testclass;
             initializeMockControls();
+            initializeMockFactories();
             initializeMocks();
             initializeTestedClasses();
         }
@@ -89,19 +91,31 @@ public class EasyMockAnnotations {
         }
 
         private void createAndInjectControl(Field field) {
-            if (field.getType() != IMocksControl.class) {
-                throw new EasyMockAnnotationInitializationException("Field annotated with @MockControl must be type of org.easymock.IMocksControl!");
-            }
-            MockControl annotation = field.getAnnotation(MockControl.class);
-            IMocksControl control = controlFactory.createControl(annotation.value());
+            assertFieldType(field);
+            IMocksControl control = createControl(field);
             injectToTestclass(field, control);
             namedControls.put(field.getName(), control);
         }
 
+        private void assertFieldType(Field field) throws EasyMockAnnotationInitializationException {
+            if (field.getType() != IMocksControl.class) {
+                throw new EasyMockAnnotationInitializationException("Field annotated with @MockControl must be type of org.easymock.IMocksControl!");
+            }
+        }
+
+        private IMocksControl createControl(Field field) {
+            MockControl annotation = field.getAnnotation(MockControl.class);
+            IMocksControl control = controlFactory.createControl(annotation.value());
+            return control;
+        }
+
+        private void initializeMockFactories() {
+            fallbackFactory = new FallbackMockHolderFactory(namedControls, testclass);
+        }
+
         private void initializeMocks() {
-            FallbackMockHolderFactory fallbackFactory = new FallbackMockHolderFactory(namedControls, testclass);
             for (Field field : getAllDeclaredFields(testclass.getClass())) {
-                createAndInjectMock(field, fallbackFactory);
+                createAndInjectMock(field);
             }
         }
 
@@ -123,25 +137,25 @@ public class EasyMockAnnotations {
             return testedClass;
         }
 
-        private void createAndInjectMock(Field field, FallbackMockHolderFactory fallbackFactory) {
+        private void createAndInjectMock(Field field) {
             Mock annotation = field.getAnnotation(Mock.class);
             if (notNull(annotation)) {
-                processMockAnnotation(fallbackFactory, field, annotation.name(), annotation.value(), annotation.control());
+                processMockAnnotation(field, annotation.name(), annotation.value(), annotation.control());
             } else {
-                processEasymockAnnotationIfPresented(field, fallbackFactory);
+                processEasymockAnnotationIfPresented(field);
             }
         }
 
-        private void processMockAnnotation(FallbackMockHolderFactory fallbackFactory, Field field, String name, MockType type, String control) {
+        private void processMockAnnotation(Field field, String name, MockType type, String control) {
             MockHolder mock = fallbackFactory.createMock(field, name, type, control);
             mocks.add(mock);
             injectToTestclass(field, mock.getMock());
         }
 
-        private void processEasymockAnnotationIfPresented(Field field, FallbackMockHolderFactory fallbackFactory) {
+        private void processEasymockAnnotationIfPresented(Field field) {
             org.easymock.Mock easyMockAnnotation = field.getAnnotation(org.easymock.Mock.class);
             if (notNull(easyMockAnnotation)) {
-                processMockAnnotation(fallbackFactory, field, easyMockAnnotation.name(), easyMockAnnotation.type(), "");
+                processMockAnnotation(field, easyMockAnnotation.name(), easyMockAnnotation.type(), "");
             }
         }
 

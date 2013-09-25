@@ -44,7 +44,7 @@ public class ByGenericSelectorTest {
         givenMocks(stringObjectHolder, integerStringHolder);
         givenTargetField("stringObjectMap");
 
-        List<MockHolder> matchingMocks = underTest.getMatchingMocks(targetField, mocks);
+        List<MockHolder> matchingMocks = underTest.getMatchingMocksByField(targetField, mocks);
 
         assertEquals(stringObjectHolder, matchingMocks.get(0));
     }
@@ -54,7 +54,7 @@ public class ByGenericSelectorTest {
         givenMocks(stringObjectHolder, integerStringHolder);
         givenTargetField("stringList");
 
-        List<MockHolder> matchingMocks = underTest.getMatchingMocks(targetField, mocks);
+        List<MockHolder> matchingMocks = underTest.getMatchingMocksByField(targetField, mocks);
 
         assertTrue(matchingMocks.isEmpty());
     }
@@ -64,7 +64,7 @@ public class ByGenericSelectorTest {
         givenMocks(stringObjectHolder, integerStringHolder);
         givenTargetField("stringIntegerMap");
 
-        List<MockHolder> matchingMocks = underTest.getMatchingMocks(targetField, mocks);
+        List<MockHolder> matchingMocks = underTest.getMatchingMocksByField(targetField, mocks);
 
         assertTrue(matchingMocks.isEmpty());
     }

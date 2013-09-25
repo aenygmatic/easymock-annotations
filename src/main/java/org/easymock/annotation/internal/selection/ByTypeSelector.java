@@ -2,6 +2,7 @@ package org.easymock.annotation.internal.selection;
 
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getInheritanceDistance;
 
+import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,6 +23,11 @@ public class ByTypeSelector implements MockSelector<Class<?>> {
             singleton = new ByTypeSelector();
         }
         return singleton;
+    }
+
+    @Override
+    public List<MockHolder> getMatchingMocksByField(Field field, List<MockHolder> mocks) {
+        return getMatchingMocks(field.getType(), mocks);
     }
 
     @Override

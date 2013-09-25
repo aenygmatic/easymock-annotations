@@ -4,6 +4,7 @@ import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.ge
 import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.setField;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 
 import org.easymock.annotation.exception.EasyMockAnnotationReflectionException;
@@ -22,6 +23,7 @@ public class MockInjector {
     private MockSelector<String> byNameSelector = ByNameSelector.getSingleton();
     private MockSelector<Class<?>> byTypeSelector = ByTypeSelector.getSingleton();
     private MockSelector<Field> byGenericSelector = ByGenericSelector.getSingleton();
+    private List<MockSelector<?>> selectors = Arrays.asList(byTypeSelector, byGenericSelector, byNameSelector);
     private List<MockHolder> mocks;
 
     public MockInjector(List<MockHolder> mocks) {
@@ -42,29 +44,20 @@ public class MockInjector {
     }
 
     private void injectField(Field field, Object target) throws EasyMockAnnotationReflectionException {
-        List<MockHolder> closestByTypeMocks = byTypeSelector.getMatchingMocks(field.getType(), mocks);
-        if (notEmpty(closestByTypeMocks)) {
-            List<MockHolder> genericlyEqualsMocks = byGenericSelector.getMatchingMocks(field, closestByTypeMocks);
-            if (notEmpty(genericlyEqualsMocks)) {
-                List<MockHolder> matchingMocks = byNameSelector.getMatchingMocks(field.getName(), genericlyEqualsMocks);
-                MockHolder matchingMock = getFirstIfAny(matchingMocks);
-                setField(field, target, matchingMock.getMock());
-            }
+        List<MockHolder> matchingMocks = mocks;
+        for (MockSelector<?> selector : selectors) {
+            matchingMocks = selector.getMatchingMocksByField(field, matchingMocks);
         }
-    }
-
-    private MockHolder getFirstIfAny(List<MockHolder> list) {
-        MockHolder result;
-        if (list.isEmpty()) {
-            result = MockHolder.emptyMock();
-        } else {
-            result = list.get(0);
-        }
-        return result;
-
+        injectToFieldWhenHasMatch(matchingMocks, field, target);
     }
 
     private boolean notEmpty(List<?> list) {
         return !list.isEmpty();
+    }
+
+    private void injectToFieldWhenHasMatch(List<MockHolder> matchingMocks, Field field, Object target) {
+        if (notEmpty(matchingMocks)) {
+            setField(field, target, matchingMocks.get(0).getMock());
+        }
     }
 }

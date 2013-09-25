@@ -25,16 +25,13 @@ public class ByGenericSelector implements MockSelector<Field> {
         return singleton;
     }
 
-    /**
-     * Selects the mocks which has the same generic parameter as the target field.
-     * This method assumes that the given lost of mock contains only instances of the target field.
-     * <p>
-     * @param targetField the target field the mocks will be injected
-     * @param mocks list of mocks
-     * @return the mock which are parameterized with the same classes
-     */
     @Override
-    public List<MockHolder> getMatchingMocks(Field targetField, List<MockHolder> mocks) {
+    public List<MockHolder> getMatchingMocks(Field selection, List<MockHolder> mocks) {
+        return getMatchingMocks(selection, mocks);
+    }
+
+    @Override
+    public List<MockHolder> getMatchingMocksByField(Field targetField, List<MockHolder> mocks) {
         List<MockHolder> matchingMocks = new LinkedList<MockHolder>();
         List<Type> targetGenerics = getGenericParameters(targetField);
         for (MockHolder mockHolder : mocks) {

@@ -40,7 +40,7 @@ public class ClassInitializer {
         private static final ConstructorComparator CONSTRUCTOR_COMPARATOR = new ConstructorComparator();
         private static final MockSelector<Class<?>> byTypeSelector = ByTypeSelector.getSingleton();
 
-        private List<MockHolder> mocks;
+        private List<MockHolder> mocks = Collections.emptyList();
         private List<Constructor<?>> constructors;
 
         private Initializer(Class<?> clazz) {

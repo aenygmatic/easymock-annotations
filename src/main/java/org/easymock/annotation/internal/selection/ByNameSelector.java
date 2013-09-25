@@ -1,5 +1,6 @@
 package org.easymock.annotation.internal.selection;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +37,11 @@ public class ByNameSelector implements MockSelector<String> {
         return singleton;
     }
 
+    @Override
+    public List<MockHolder> getMatchingMocksByField(Field field, List<MockHolder> mocks) {
+        return getMatchingMocks(field.getName(), mocks);
+    }
+
     /**
      * Select a the matching mock from the given mocks according to the selection strategy.
      * <p>
@@ -48,9 +54,7 @@ public class ByNameSelector implements MockSelector<String> {
      * <p>
      * @param targetName name of the field the mock will be injected
      * @param mocks list of {@link MockHolder} of the possible mock objects
-     * @return return one mock if it matches to the {@link SelectionStrategy SelectionStrategies}. If
-     * no match found the first element of the list will be returned. If the given list is empty or
-     * {@code null} {@link MockHolder#emptyMock()} will be returned.
+     * @return return selected list of mocks
      */
     @Override
     public List<MockHolder> getMatchingMocks(String targetName, List<MockHolder> mocks) {
