@@ -20,7 +20,7 @@ public interface MockSelector<T> {
      * @param mocks original list of mocks
      * @return selected list of mocks
      */
-    List<MockHolder> getMatchingMocks(T selection, List<MockHolder> mocks);
+    List<MockHolder> select(T selection, List<MockHolder> mocks);
 
     /**
      * Selects the mock according to the rules of implementation.
@@ -29,6 +29,6 @@ public interface MockSelector<T> {
      * @param mocks original list of mocks
      * @return selected list of mocks
      */
-    List<MockHolder> getMatchingMocksByField(Field field, List<MockHolder> mocks);
+    List<MockHolder> selectByField(Field field, List<MockHolder> mocks);
 
 }

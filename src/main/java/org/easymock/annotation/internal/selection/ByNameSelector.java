@@ -38,8 +38,8 @@ public class ByNameSelector implements MockSelector<String> {
     }
 
     @Override
-    public List<MockHolder> getMatchingMocksByField(Field field, List<MockHolder> mocks) {
-        return getMatchingMocks(field.getName(), mocks);
+    public List<MockHolder> selectByField(Field field, List<MockHolder> mocks) {
+        return select(field.getName(), mocks);
     }
 
     /**
@@ -54,10 +54,10 @@ public class ByNameSelector implements MockSelector<String> {
      * <p>
      * @param targetName name of the field the mock will be injected
      * @param mocks list of {@link MockHolder} of the possible mock objects
-     * @return return selected list of mocks
+     * @return return selected list of mocks (the list can only contains one or zero elements)
      */
     @Override
-    public List<MockHolder> getMatchingMocks(String targetName, List<MockHolder> mocks) {
+    public List<MockHolder> select(String targetName, List<MockHolder> mocks) {
         List<MockHolder> matchingMocks = new LinkedList<MockHolder>();
         MockHolder matchingMock = null;
 

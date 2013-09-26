@@ -7,7 +7,6 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 
-import org.easymock.annotation.exception.EasyMockAnnotationReflectionException;
 import org.easymock.annotation.internal.selection.ByGenericSelector;
 import org.easymock.annotation.internal.selection.ByNameSelector;
 import org.easymock.annotation.internal.selection.ByTypeSelector;
@@ -43,21 +42,21 @@ public class MockInjector {
         return target;
     }
 
-    private void injectField(Field field, Object target) throws EasyMockAnnotationReflectionException {
-        List<MockHolder> matchingMocks = mocks;
+    private void injectField(Field field, Object target) {
+        List<MockHolder> selectedMocks = mocks;
         for (MockSelector<?> selector : selectors) {
-            matchingMocks = selector.getMatchingMocksByField(field, matchingMocks);
+            selectedMocks = selector.selectByField(field, selectedMocks);
         }
-        injectToFieldWhenHasMatch(matchingMocks, field, target);
+        injectToFieldWhenSelected(selectedMocks, field, target);
+    }
+
+    private void injectToFieldWhenSelected(List<MockHolder> matchingMocks, Field field, Object target) {
+        if (notEmpty(matchingMocks)) {
+            setField(field, target, matchingMocks.get(0).getMock());
+        }
     }
 
     private boolean notEmpty(List<?> list) {
         return !list.isEmpty();
-    }
-
-    private void injectToFieldWhenHasMatch(List<MockHolder> matchingMocks, Field field, Object target) {
-        if (notEmpty(matchingMocks)) {
-            setField(field, target, matchingMocks.get(0).getMock());
-        }
     }
 }

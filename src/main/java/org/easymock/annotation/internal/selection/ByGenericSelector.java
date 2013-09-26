@@ -26,12 +26,12 @@ public class ByGenericSelector implements MockSelector<Field> {
     }
 
     @Override
-    public List<MockHolder> getMatchingMocks(Field selection, List<MockHolder> mocks) {
-        return getMatchingMocks(selection, mocks);
+    public List<MockHolder> select(Field selection, List<MockHolder> mocks) {
+        return select(selection, mocks);
     }
 
     @Override
-    public List<MockHolder> getMatchingMocksByField(Field targetField, List<MockHolder> mocks) {
+    public List<MockHolder> selectByField(Field targetField, List<MockHolder> mocks) {
         List<MockHolder> matchingMocks = new LinkedList<MockHolder>();
         List<Type> targetGenerics = getGenericParameters(targetField);
         for (MockHolder mockHolder : mocks) {

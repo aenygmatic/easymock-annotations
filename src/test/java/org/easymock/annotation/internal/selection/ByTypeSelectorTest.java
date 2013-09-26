@@ -37,28 +37,28 @@ public class ByTypeSelectorTest {
     }
 
     @Test
-    public void testGetMatchingMocksShouldReturnEmptyListWhenNoMatchByType() {
+    public void testSelectShouldReturnEmptyListWhenNoMatchByType() {
         givenMocksOf(arrayListMock, linkedListMock, hashSetMock);
 
-        List<MockHolder> selectedMocks = underTest.getMatchingMocks(Map.class, mocks);
+        List<MockHolder> selectedMocks = underTest.select(Map.class, mocks);
 
         assertTrue(selectedMocks.isEmpty());
     }
 
     @Test
-    public void testGetMatchingMocksShouldReturnListOfMockWhenMoreMocksAreAtSameInheritanceLevel() {
+    public void testSelectShouldReturnListOfMockWhenMoreMocksAreAtSameInheritanceLevel() {
         givenMocksOf(arrayListMock, linkedListMock, hashSetMock);
 
-        List<MockHolder> selectedMocks = underTest.getMatchingMocks(Collection.class, mocks);
+        List<MockHolder> selectedMocks = underTest.select(Collection.class, mocks);
 
         assertContainsOnly(selectedMocks, arrayListMock, hashSetMock);
     }
 
     @Test
-    public void testGetMatchingMocksShouldReturnOneMockWhenThereIsOneClosest() {
+    public void testSelectShouldReturnOneMockWhenThereIsOneClosest() {
         givenMocksOf(arrayListMock, linkedListMock, hashSetMock);
 
-        List<MockHolder> selectedMocks = underTest.getMatchingMocks(List.class, mocks);
+        List<MockHolder> selectedMocks = underTest.select(List.class, mocks);
 
         assertContainsOnly(selectedMocks, arrayListMock);
     }

@@ -6,6 +6,10 @@ import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import static org.easymock.annotation.internal.selection.ByNameSelector.NAME_CONTAINS_STRATEGY;
+import static org.easymock.annotation.internal.selection.ByNameSelector.NAME_EQUALS_IGNORE_CASE_STRATEGY;
+import static org.easymock.annotation.internal.selection.ByNameSelector.NAME_EQUALS_STRATEGY;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,48 +40,60 @@ public class ByNameSelectorTest {
     }
 
     @Test
-    public void testGetMatchingMockDefaultStrategyShouldSelectEqualName() {
+    public void testSelectDefaultStrategyShouldSelectEqualName() {
         givenMockHolderFields();
 
-        List<MockHolder> actual = underTest.getMatchingMocks("mockHoder", mocks);
+        List<MockHolder> actual = underTest.select("mockHoder", mocks);
 
         assertEquals(mockHolder, firstElementOf(actual));
     }
 
     @Test
-    public void testGetMatchingMockDefaultStrategyShouldSelectEqualIgnoreCaseName() {
+    public void testSelectDefaultStrategyShouldSelectEqualIgnoreCaseName() {
         givenMockHolderFields();
 
-        List<MockHolder> actual = underTest.getMatchingMocks("lowerCaseMock", mocks);
+        List<MockHolder> actual = underTest.select("lowerCaseMock", mocks);
 
         assertEquals(lowercasemock, firstElementOf(actual));
     }
 
     @Test
-    public void testGetMatchingMockDefaultStrategyShouldSelectMockHolderWhenItsNameContainedInFieldsName() {
+    public void testSelectDefaultStrategyShouldSelectMockHolderWhenItsNameContainedInFieldsName() {
         givenMockHolderFields();
 
-        List<MockHolder> actual = underTest.getMatchingMocks("holderInName", mocks);
+        List<MockHolder> actual = underTest.select("holderInName", mocks);
 
         assertEquals(holder, firstElementOf(actual));
     }
 
     @Test
-    public void testGetMatchingMockShouldReturnFirstMockWhenNoMatchingOne() {
+    public void testSelectShouldReturnFirstMockWhenNoMatchingOne() {
         givenMockHolderFields();
 
-        List<MockHolder> actual = underTest.getMatchingMocks("noSuchField", mocks);
+        List<MockHolder> actual = underTest.select("noSuchField", mocks);
 
         assertEquals(mockHolder, firstElementOf(actual));
     }
 
     @Test
-    public void testGetMatchingMockShouldReturnEmptyMocksWhenMockListIsEmpty() {
+    public void testSelectShouldReturnEmptyMocksWhenMockListIsEmpty() {
         List<MockHolder> mockList = Collections.EMPTY_LIST;
 
-        List<MockHolder> actual = underTest.getMatchingMocks("name", mockList);
+        List<MockHolder> actual = underTest.select("name", mockList);
 
         assertTrue(actual.isEmpty());
+    }
+
+    @Test
+    public void testOverrideStrategy() {
+        givenMockHolderFields();
+
+        ByNameSelector.overrideStrategy(NAME_CONTAINS_STRATEGY);
+        List<MockHolder> actual = underTest.select("mo", mocks);
+
+        assertTrue(actual.size() == 1);
+        assertTrue(actual.contains(mockHolder));
+        ByNameSelector.overrideStrategy(NAME_EQUALS_STRATEGY, NAME_EQUALS_IGNORE_CASE_STRATEGY, NAME_CONTAINS_STRATEGY);
     }
 
     private void givenMockHolderFields() {

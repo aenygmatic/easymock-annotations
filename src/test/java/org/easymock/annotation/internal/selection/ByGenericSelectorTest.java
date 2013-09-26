@@ -40,31 +40,31 @@ public class ByGenericSelectorTest {
     }
 
     @Test
-    public void testGetMatchingMocksShouldReturnOnlyMockWithSameGenericParameters() {
+    public void testSelectShouldReturnOnlyMockWithSameGenericParameters() {
         givenMocks(stringObjectHolder, integerStringHolder);
         givenTargetField("stringObjectMap");
 
-        List<MockHolder> matchingMocks = underTest.getMatchingMocksByField(targetField, mocks);
+        List<MockHolder> matchingMocks = underTest.selectByField(targetField, mocks);
 
         assertEquals(stringObjectHolder, matchingMocks.get(0));
     }
 
     @Test
-    public void testGetMatchingMocksShouldNotSelectWhenLessGenericParameterInTarget() {
+    public void testSelectShouldNotSelectWhenLessGenericParameterInTarget() {
         givenMocks(stringObjectHolder, integerStringHolder);
         givenTargetField("stringList");
 
-        List<MockHolder> matchingMocks = underTest.getMatchingMocksByField(targetField, mocks);
+        List<MockHolder> matchingMocks = underTest.selectByField(targetField, mocks);
 
         assertTrue(matchingMocks.isEmpty());
     }
 
     @Test
-    public void testGetMatchingMocksShouldNotSelectWhenGenericParamOrderIsDifferent() {
+    public void testSelectShouldNotSelectWhenGenericParamOrderIsDifferent() {
         givenMocks(stringObjectHolder, integerStringHolder);
         givenTargetField("stringIntegerMap");
 
-        List<MockHolder> matchingMocks = underTest.getMatchingMocksByField(targetField, mocks);
+        List<MockHolder> matchingMocks = underTest.selectByField(targetField, mocks);
 
         assertTrue(matchingMocks.isEmpty());
     }

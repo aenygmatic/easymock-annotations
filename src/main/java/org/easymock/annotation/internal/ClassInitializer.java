@@ -38,8 +38,8 @@ public class ClassInitializer {
     private static class Initializer {
 
         private static final ConstructorComparator CONSTRUCTOR_COMPARATOR = new ConstructorComparator();
-        private static final MockSelector<Class<?>> byTypeSelector = ByTypeSelector.getSingleton();
 
+        private MockSelector<Class<?>> byTypeSelector = ByTypeSelector.getSingleton();
         private List<MockHolder> mocks = Collections.emptyList();
         private List<Constructor<?>> constructors;
 
@@ -104,7 +104,7 @@ public class ClassInitializer {
         private List<Object> selectParameterCandidates(Constructor<?> constructor) {
             List<Object> parameterMocks = new LinkedList<Object>();
             for (Class<?> parameterType : constructor.getParameterTypes()) {
-                List<MockHolder> matchingMocks = byTypeSelector.getMatchingMocks(parameterType, mocks);
+                List<MockHolder> matchingMocks = byTypeSelector.select(parameterType, mocks);
                 if (matchingMocks.isEmpty()) {
                     break;
                 }

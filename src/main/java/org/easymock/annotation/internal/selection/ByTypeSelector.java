@@ -26,12 +26,12 @@ public class ByTypeSelector implements MockSelector<Class<?>> {
     }
 
     @Override
-    public List<MockHolder> getMatchingMocksByField(Field field, List<MockHolder> mocks) {
-        return getMatchingMocks(field.getType(), mocks);
+    public List<MockHolder> selectByField(Field field, List<MockHolder> mocks) {
+        return select(field.getType(), mocks);
     }
 
     @Override
-    public List<MockHolder> getMatchingMocks(Class<?> selection, List<MockHolder> mocks) {
+    public List<MockHolder> select(Class<?> selection, List<MockHolder> mocks) {
         List<MockHolder> closestMocks = new LinkedList<MockHolder>();
         int closestDist = MAX_DEPTH;
         for (MockHolder mock : mocks) {
