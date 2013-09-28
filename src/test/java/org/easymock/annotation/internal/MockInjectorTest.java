@@ -1,3 +1,18 @@
+/*
+ * Copyright 2013 Balazs Berkes.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.easymock.annotation.internal;
 
 import static org.junit.Assert.assertEquals;
@@ -152,6 +167,7 @@ public class MockInjectorTest {
     private Field getFieldNameOf(Object mock) {
         Field field = null;
         for (Field f : this.getClass().getDeclaredFields()) {
+            f.setAccessible(true);
             try {
                 if (mock == f.get(this)) {
                     field = f;
@@ -170,39 +186,39 @@ public class MockInjectorTest {
         set = new HashSet<String>();
     }
 
-    class SuperClass {
+    private static class SuperClass {
     }
 
-    class Clazz extends SuperClass {
+    private static class Clazz extends SuperClass {
     }
 
-    class SubClass extends Clazz {
+    private static class SubClass extends Clazz {
     }
 
-    class TestedClassWithAllUniqueField {
+    private static class TestedClassWithAllUniqueField {
 
-        public SuperClass superClass;
-        public Clazz clazz;
-        public SubClass subClass;
+        SuperClass superClass;
+        Clazz clazz;
+        SubClass subClass;
     }
 
-    class TestedClassWithInheritedFields extends TestedClassWithAllUniqueField {
+    private static class TestedClassWithInheritedFields extends TestedClassWithAllUniqueField {
     }
 
-    class TestedClassWithFieldsOfSameType {
+    private static class TestedClassWithFieldsOfSameType {
 
-        public SuperClass superClass;
-        public SuperClass anotherSuperClass;
+        SuperClass superClass;
+        SuperClass anotherSuperClass;
     }
 
-    class TestedClassWithFieldsOfSameTypeLowCaseOnly {
+    private static class TestedClassWithFieldsOfSameTypeLowCaseOnly {
 
-        public SuperClass superclass;
-        public SuperClass anothersuperclass;
+        SuperClass superclass;
+        SuperClass anothersuperclass;
     }
 
-    class TestedClassWithInterfaceField {
+    private static class TestedClassWithInterfaceField {
 
-        public Set<String> strings;
+        Set<String> strings;
     }
 }

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2013 Balazs Berkes.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.easymock.annotation.internal.selection;
 
 import static org.junit.Assert.assertEquals;
@@ -21,10 +36,10 @@ import org.easymock.annotation.internal.MockHolder;
  */
 public class ByGenericSelectorTest {
 
-    public Map<String, Object> stringObjectMap;
-    public Map<Integer, String> integerStringMap;
-    public Map<String, Integer> stringIntegerMap;
-    public List<String> stringList;
+    private Map<String, Object> stringObjectMap;
+    private Map<Integer, String> integerStringMap;
+    private Map<String, Integer> stringIntegerMap;
+    private List<String> stringList;
 
     private MockHolder stringObjectHolder;
     private MockHolder integerStringHolder;
@@ -72,22 +87,29 @@ public class ByGenericSelectorTest {
     private void initializeMocks() throws NoSuchFieldException {
         stringObjectMap = new HashMap<String, Object>();
         stringObjectHolder = new MockHolder();
-        stringObjectHolder.setSourceField(this.getClass().getField("stringObjectMap"));
+        stringObjectHolder.setSourceField(getFieldByName("stringObjectMap"));
 
         integerStringMap = new HashMap<Integer, String>();
         integerStringHolder = new MockHolder();
-        integerStringHolder.setSourceField(this.getClass().getField("integerStringMap"));
-
+        integerStringHolder.setSourceField(getFieldByName("integerStringMap"));
     }
 
     private void givenMocks(MockHolder... mocks) {
         this.mocks = Arrays.asList(mocks);
     }
 
-    private void givenTargetField(String string) {
-        try {
-            targetField = this.getClass().getField(string);
-        } catch (NoSuchFieldException ex) {
+    private void givenTargetField(String name) {
+        targetField = getFieldByName(name);
+    }
+
+    private Field getFieldByName(String name) {
+        Field field = null;
+        for (Field f : this.getClass().getDeclaredFields()) {
+            if (f.getName().equals(name)) {
+                field = f;
+                break;
+            }
         }
+        return field;
     }
 }

@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>easymock-annotation</groupId>
+    <groupId>org.easymock.annotation</groupId>
     <artifactId>easymock-annotations</artifactId>
     <version>2.0</version>
     <packaging>jar</packaging>
@@ -13,6 +13,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <netbeans.hint.license>apache20</netbeans.hint.license>
     </properties>
 
     <dependencies>
