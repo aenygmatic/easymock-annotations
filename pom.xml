@@ -3,18 +3,31 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.easymock.annotation</groupId>
+    <groupId>mock-annotations</groupId>
     <artifactId>easymock-annotations</artifactId>
     <version>2.0</version>
     <packaging>jar</packaging>
 
-    <name>easymock-annotations</name>
+    <name>mock-annotations-easymock</name>
     <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>apache20</netbeans.hint.license>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/resources/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>
@@ -27,6 +40,11 @@
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>mock-annotations-core</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 </project>

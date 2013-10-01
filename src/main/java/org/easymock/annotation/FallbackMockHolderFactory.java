@@ -15,8 +15,8 @@
  */
 package org.easymock.annotation;
 
-import static org.easymock.annotation.utils.EasyMockAnnotationValidationUtils.isEmpty;
-import static org.easymock.annotation.utils.EasyMockAnnotationValidationUtils.isNull;
+import static org.mockannotations.utils.MockAnnotationValidationUtils.isEmpty;
+import static org.mockannotations.utils.MockAnnotationValidationUtils.isNull;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 
+import org.mockannotations.MockHolder;
+
 import org.easymock.EasyMockSupport;
 import org.easymock.IMocksControl;
 import org.easymock.MockType;
@@ -32,7 +34,6 @@ import org.easymock.MockType;
 import org.easymock.annotation.internal.ControlledMockFactory;
 import org.easymock.annotation.internal.EasyMockSupportMockFactory;
 import org.easymock.annotation.internal.MockFactory;
-import org.easymock.annotation.internal.MockHolder;
 import org.easymock.annotation.internal.StaticMockFactory;
 
 /**

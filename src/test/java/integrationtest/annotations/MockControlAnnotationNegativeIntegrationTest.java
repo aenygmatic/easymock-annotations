@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2013 Balazs Berkes.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +15,10 @@
  */
 package integrationtest.annotations;
 
-import org.junit.Test;
-
 import org.easymock.annotation.EasyMockAnnotations;
 import org.easymock.annotation.MockControl;
-import org.easymock.annotation.exception.EasyMockAnnotationInitializationException;
+
+import org.junit.Test;
 
 /**
  * Integration test for exception type when {@link MockControl @MockContol} annotation is placed on incorrect type of
@@ -32,7 +31,7 @@ public class MockControlAnnotationNegativeIntegrationTest {
     @MockControl
     private Thread incorrectType;
 
-    @Test(expected = EasyMockAnnotationInitializationException.class)
+    @Test(expected = RuntimeException.class)
     public void testInitializeShouldThrowExceptionWhenControlTypeIsIncorrect() {
         EasyMockAnnotations.initialize(this);
     }

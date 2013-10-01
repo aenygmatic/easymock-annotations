@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2013 Balazs Berkes.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,12 @@
  */
 package org.easymock.annotation;
 
-import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getAllDeclaredFields;
-import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.getField;
-import static org.easymock.annotation.utils.EasyMockAnnotationReflectionUtils.setField;
-import static org.easymock.annotation.utils.EasyMockAnnotationValidationUtils.assertNotNull;
-import static org.easymock.annotation.utils.EasyMockAnnotationValidationUtils.isNull;
-import static org.easymock.annotation.utils.EasyMockAnnotationValidationUtils.notNull;
+import static org.mockannotations.utils.MockAnnotationReflectionUtils.getAllDeclaredFields;
+import static org.mockannotations.utils.MockAnnotationReflectionUtils.getField;
+import static org.mockannotations.utils.MockAnnotationReflectionUtils.setField;
+import static org.mockannotations.utils.MockAnnotationValidationUtils.assertNotNull;
+import static org.mockannotations.utils.MockAnnotationValidationUtils.isNull;
+import static org.mockannotations.utils.MockAnnotationValidationUtils.notNull;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
@@ -28,16 +28,16 @@ import java.util.List;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 
+import org.mockannotations.ClassInitializer;
+import org.mockannotations.MockHolder;
+import org.mockannotations.MockInjector;
+
 import org.easymock.EasyMockSupport;
 import org.easymock.IMocksControl;
 import org.easymock.MockType;
 import org.easymock.TestSubject;
 
-import org.easymock.annotation.exception.EasyMockAnnotationInitializationException;
-import org.easymock.annotation.internal.ClassInitializer;
 import org.easymock.annotation.internal.IMockControlFactory;
-import org.easymock.annotation.internal.MockHolder;
-import org.easymock.annotation.internal.MockInjector;
 
 /**
  * Initialize the testclass. Scans for the {@link Mock @Mock}, {@link MockControl @MockControl} and
@@ -112,9 +112,9 @@ public class EasyMockAnnotations {
             namedControls.put(field.getName(), control);
         }
 
-        private void assertFieldType(Field field) throws EasyMockAnnotationInitializationException {
+        private void assertFieldType(Field field) throws RuntimeException {
             if (field.getType() != IMocksControl.class) {
-                throw new EasyMockAnnotationInitializationException("Field annotated with @MockControl must be type of org.easymock.IMocksControl!");
+                throw new RuntimeException("Field annotated with @MockControl must be type of org.easymock.IMocksControl!");
             }
         }
 
