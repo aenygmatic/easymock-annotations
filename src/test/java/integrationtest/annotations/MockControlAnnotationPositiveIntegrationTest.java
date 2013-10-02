@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2013 Balazs Berkes.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,10 +21,11 @@ import java.lang.reflect.Field;
 
 import org.easymock.IMocksControl;
 import org.easymock.MockType;
-import org.junit.Test;
 
 import org.easymock.annotation.EasyMockAnnotations;
 import org.easymock.annotation.MockControl;
+
+import org.junit.Test;
 
 /**
  * Integration test for {@link MockControl @MockContol} creation and type parameters.

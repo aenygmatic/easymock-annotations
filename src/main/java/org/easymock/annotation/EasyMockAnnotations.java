@@ -31,12 +31,14 @@ import java.util.TreeMap;
 import org.mockannotations.ClassInitializer;
 import org.mockannotations.MockHolder;
 import org.mockannotations.MockInjector;
+import org.mockannotations.utils.AnnotatedFieldScanner;
 
 import org.easymock.EasyMockSupport;
 import org.easymock.IMocksControl;
 import org.easymock.MockType;
 import org.easymock.TestSubject;
 
+import org.easymock.annotation.internal.FallbackMockHolderFactory;
 import org.easymock.annotation.internal.IMockControlFactory;
 
 /**
@@ -80,6 +82,7 @@ public class EasyMockAnnotations {
 
     private static class EasyMockAnnotationsInitializer {
 
+        private final AnnotatedFieldScanner<MockControl> controlScanner = AnnotatedFieldScanner.getScanner(MockControl.class);
         private final NavigableMap<String, IMocksControl> namedControls = new TreeMap<String, IMocksControl>();
         private final IMockControlFactory controlFactory = IMockControlFactory.getSingleton();
         private final ClassInitializer classInitializer = new ClassInitializer();
@@ -98,10 +101,8 @@ public class EasyMockAnnotations {
         }
 
         private void initializeMockControls() {
-            for (Field field : getAllDeclaredFields(testclass.getClass())) {
-                if (field.isAnnotationPresent(MockControl.class)) {
-                    createAndInjectControl(field);
-                }
+            for (Field field : controlScanner.scan(testclass)) {
+                createAndInjectControl(field);
             }
         }
 

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.easymock.annotation;
+package org.easymock.annotation.internal;
 
 import static org.mockannotations.utils.MockAnnotationValidationUtils.isEmpty;
 import static org.mockannotations.utils.MockAnnotationValidationUtils.isNull;
@@ -30,11 +30,6 @@ import org.mockannotations.MockHolder;
 import org.easymock.EasyMockSupport;
 import org.easymock.IMocksControl;
 import org.easymock.MockType;
-
-import org.easymock.annotation.internal.ControlledMockFactory;
-import org.easymock.annotation.internal.EasyMockSupportMockFactory;
-import org.easymock.annotation.internal.MockFactory;
-import org.easymock.annotation.internal.StaticMockFactory;
 
 /**
  * Creates mock by according to the given rules.
@@ -55,7 +50,8 @@ public class FallbackMockHolderFactory {
 
     public MockHolder createMock(Field field, String name, MockType mockType, String contolName) {
         Object mock = createMockByFallback(field, name, mockType, contolName);
-        return createMockHolder(mock, field, name);
+
+        return MockHolder.create(mock, field, name);
     }
 
     private Object createMockByFallback(Field field, String name, MockType mockType, String contolName) {
@@ -66,14 +62,6 @@ public class FallbackMockHolderFactory {
                 break;
             }
         }
-        return mock;
-    }
-
-    private MockHolder createMockHolder(Object mockedObject, Field field, String name) {
-        MockHolder mock = new MockHolder();
-        mock.setMock(mockedObject);
-        mock.setSourceField(field);
-        mock.setName(name);
         return mock;
     }
 
