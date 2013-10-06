@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2013 Balazs Berkes.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,13 +19,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import org.easymock.annotation.EasyMockAnnotations;
 import org.easymock.annotation.Injected;
 
+import org.junit.Test;
+
 /**
- * Integration test for {@link Injected @Injected} creation and type parameters.
+ * Integration test for {@link Injected @Injected}. Not null fields should be skipped.
  * <p>
  * @author Balazs Berkes
  */

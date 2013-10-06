@@ -31,9 +31,8 @@ import java.util.TreeMap;
 import org.mockannotations.ClassInitializer;
 import org.mockannotations.MockHolder;
 import org.mockannotations.MockInjector;
-import org.mockannotations.utils.AnnotatedFieldScanner;
+import org.mockannotations.utils.AnnotationScanner;
 
-import org.easymock.EasyMockSupport;
 import org.easymock.IMocksControl;
 import org.easymock.MockType;
 import org.easymock.TestSubject;
@@ -82,7 +81,7 @@ public class EasyMockAnnotations {
 
     private static class EasyMockAnnotationsInitializer {
 
-        private final AnnotatedFieldScanner<MockControl> controlScanner = AnnotatedFieldScanner.getScanner(MockControl.class);
+        private final AnnotationScanner<MockControl> controlScanner = AnnotationScanner.getScanner(MockControl.class);
         private final NavigableMap<String, IMocksControl> namedControls = new TreeMap<String, IMocksControl>();
         private final IMockControlFactory controlFactory = IMockControlFactory.getSingleton();
         private final ClassInitializer classInitializer = new ClassInitializer();
