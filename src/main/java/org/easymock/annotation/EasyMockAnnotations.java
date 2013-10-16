@@ -41,7 +41,7 @@ import org.easymock.annotation.internal.FallbackMockHolderFactory;
 import org.easymock.annotation.internal.IMockControlFactory;
 
 /**
- * Initialize the testclass. Scans for the {@link Mock @Mock}, {@link MockControl @MockControl} and
+ * Initialize the test class. Scans for the {@link Mock @Mock}, {@link MockControl @MockControl} and
  * {@link Injected @Injected} annotations.
  * <p>
  * @author Balazs Berkes
@@ -49,7 +49,7 @@ import org.easymock.annotation.internal.IMockControlFactory;
 public class EasyMockAnnotations {
 
     /**
-     * Initialize the testclass. Scans the testclass for {@code @Mock}, {@code @MockControl} and {@code @Injected}
+     * Initialize the test class. Scans the test class for {@code @Mock}, {@code @MockControl} and {@code @Injected}
      * annotations. If {@code @MockControl} is presented mocks will be created by the first annotated
      * {@link IMocksControl} or the {@code IMocksControl} with name associated with the
      * {@link Mock#control() @Mock.control()}. If no {@code @MockControl} annotation is presented mocks are created by
@@ -68,11 +68,11 @@ public class EasyMockAnnotations {
      *     }
      * </pre>
      *
-     * @param testclass the testclass
+     * @param testClass the testclass
      */
-    public static void initialize(Object testclass) {
-        assertNotNull(testclass, "Test class cannot be null!");
-        new EasyMockAnnotationsInitializer().initialize(testclass);
+    public static void initialize(Object testClass) {
+        assertNotNull(testClass, "Test class cannot be null!");
+        new EasyMockAnnotationsInitializer().initialize(testClass);
 
     }
 
@@ -89,10 +89,10 @@ public class EasyMockAnnotations {
         private final MockInjector mockInjector = new MockInjector(mocks);
 
         private FallbackMockHolderFactory fallbackFactory;
-        private Object testclass;
+        private Object testClass;
 
-        private void initialize(Object testclass) {
-            this.testclass = testclass;
+        private void initialize(Object testClass) {
+            this.testClass = testClass;
             initializeMockControls();
             initializeMockFactories();
             initializeMocks();
@@ -100,7 +100,7 @@ public class EasyMockAnnotations {
         }
 
         private void initializeMockControls() {
-            for (Field field : controlScanner.scan(testclass)) {
+            for (Field field : controlScanner.scan(testClass)) {
                 createAndInjectControl(field);
             }
         }
@@ -125,17 +125,17 @@ public class EasyMockAnnotations {
         }
 
         private void initializeMockFactories() {
-            fallbackFactory = new FallbackMockHolderFactory(namedControls, testclass);
+            fallbackFactory = new FallbackMockHolderFactory(namedControls, testClass);
         }
 
         private void initializeMocks() {
-            for (Field field : getAllDeclaredFields(testclass.getClass())) {
+            for (Field field : getAllDeclaredFields(testClass.getClass())) {
                 createAndInjectMock(field);
             }
         }
 
         private void initializeTestedClasses() {
-            for (Field field : getAllDeclaredFields(testclass.getClass())) {
+            for (Field field : getAllDeclaredFields(testClass.getClass())) {
                 if (field.isAnnotationPresent(Injected.class) || field.isAnnotationPresent(TestSubject.class)) {
                     Object testedClass = createInstanceIfNull(field);
                     mockInjector.injectTo(testedClass);
@@ -144,7 +144,7 @@ public class EasyMockAnnotations {
         }
 
         private Object createInstanceIfNull(Field field) {
-            Object testedClass = getField(field, testclass);
+            Object testedClass = getField(field, testClass);
             if (isNull(testedClass)) {
                 testedClass = classInitializer.initialize(field.getType(), mocks);
                 injectToTestclass(field, testedClass);
@@ -157,7 +157,7 @@ public class EasyMockAnnotations {
             if (notNull(annotation)) {
                 processMockAnnotation(field, annotation.name(), annotation.value(), annotation.control());
             } else {
-                processEasymockAnnotationIfPresented(field);
+                processEasyMockAnnotationIfPresented(field);
             }
         }
 
@@ -167,7 +167,7 @@ public class EasyMockAnnotations {
             injectToTestclass(field, mock.getMock());
         }
 
-        private void processEasymockAnnotationIfPresented(Field field) {
+        private void processEasyMockAnnotationIfPresented(Field field) {
             org.easymock.Mock easyMockAnnotation = field.getAnnotation(org.easymock.Mock.class);
             if (notNull(easyMockAnnotation)) {
                 processMockAnnotation(field, easyMockAnnotation.name(), easyMockAnnotation.type(), "");
@@ -175,7 +175,7 @@ public class EasyMockAnnotations {
         }
 
         private void injectToTestclass(Field field, Object control) {
-            setField(field, testclass, control);
+            setField(field, testClass, control);
         }
     }
 }

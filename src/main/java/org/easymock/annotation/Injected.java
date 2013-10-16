@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 
 /**
  * Fields annotated with {@code @Injected} will be injected with mocks created by
- * {@link org.easymock.annotation.Mock @Mock} annotation after the testclass is initialized by
+ * {@link org.easymock.annotation.Mock @Mock} annotation after the test class is initialized by
  * {@link EasyMockAnnotations#initialize(Object)}.
  * <p>
  * Injection priority

@@ -40,12 +40,12 @@ public class FallbackMockHolderFactory {
 
     private List<FallbackFactory> factories = new LinkedList<FallbackFactory>();
 
-    public FallbackMockHolderFactory(NavigableMap<String, IMocksControl> namedContols, Object testclass) {
+    public FallbackMockHolderFactory(NavigableMap<String, IMocksControl> namedContols, Object testClass) {
         if (!namedContols.isEmpty()) {
             factories.add(new NamedControlledFactory(namedContols));
             factories.add(new DefaultControlledFactory(namedContols.firstEntry().getValue()));
         }
-        factories.add(new NonControlledFactory(testclass));
+        factories.add(new NonControlledFactory(testClass));
     }
 
     public MockHolder createMock(Field field, String name, MockType mockType, String contolName) {
@@ -127,9 +127,9 @@ public class FallbackMockHolderFactory {
 
         private MockFactory factory;
 
-        public NonControlledFactory(Object testclass) {
-            if (testclass instanceof EasyMockSupport) {
-                factory = new EasyMockSupportMockFactory((EasyMockSupport) testclass);
+        public NonControlledFactory(Object testClass) {
+            if (testClass instanceof EasyMockSupport) {
+                factory = new EasyMockSupportMockFactory((EasyMockSupport) testClass);
             } else {
                 factory = new StaticMockFactory();
             }

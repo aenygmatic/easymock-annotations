@@ -23,7 +23,7 @@ import java.lang.annotation.Target;
 import org.easymock.MockType;
 
 /**
- * Fields annotated with {@code @Mock} will be filled up with mock object after the testclass is initialized by
+ * Fields annotated with {@code @Mock} will be filled up with mock object after the test class is initialized by
  * {@link EasyMockAnnotations#initialize(Object)}.
  * <p>
  * @author Balazs Berkes
