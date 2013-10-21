@@ -19,10 +19,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Test;
+
 import org.easymock.annotation.EasyMockAnnotations;
 import org.easymock.annotation.Injected;
-
-import org.junit.Test;
 
 /**
  * Integration test for {@link Injected @Injected}. Not null fields should be skipped.

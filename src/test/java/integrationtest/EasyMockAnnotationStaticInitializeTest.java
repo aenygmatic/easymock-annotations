@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2013 Balazs Berkes.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,6 +18,9 @@ package integrationtest;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import integrationtest.support.FacadeWithNonRelatedComponents;
+import integrationtest.support.IndependentObject;
+import integrationtest.support.ThirdLevelClassA;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,12 +28,8 @@ import org.easymock.annotation.EasyMockAnnotations;
 import org.easymock.annotation.Injected;
 import org.easymock.annotation.Mock;
 
-import integrationtest.support.FacadeWithNonRelatedComponents;
-import integrationtest.support.IndependentObject;
-import integrationtest.support.ThirdLevelClassA;
-
 /**
- * Integration test for initializing of testclass and tested class.
+ * Integration test for initializing of test class and tested class.
  * <p>
  * @author Balazs Berkes
  */

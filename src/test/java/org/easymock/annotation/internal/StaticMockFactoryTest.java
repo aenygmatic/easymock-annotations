@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2013 Balazs Berkes.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,9 +17,10 @@ package org.easymock.annotation.internal;
 
 import static org.junit.Assert.assertTrue;
 
-import org.easymock.MockType;
 import org.junit.Before;
 import org.junit.Test;
+
+import org.easymock.MockType;
 
 /**
  * Unit test for {@link StaticMockFactory}.

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2013 Balazs Berkes.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,14 +17,13 @@ package integrationtest;
 
 import static org.junit.Assert.assertEquals;
 
+import integrationtest.support.ThirdLevelClassA;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.easymock.annotation.EasyMockAnnotations;
 import org.easymock.annotation.Injected;
 import org.easymock.annotation.Mock;
-
-import integrationtest.support.ThirdLevelClassA;
 
 /**
  * Integration test for {@link EasyMockAnnotations#initialize(Object)}.

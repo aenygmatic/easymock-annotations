@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2013 Balazs Berkes.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,14 +22,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import integrationtest.support.ComponentWithGenericFields;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.easymock.annotation.EasyMockAnnotations;
 import org.easymock.annotation.Injected;
 import org.easymock.annotation.Mock;
-
-import integrationtest.support.ComponentWithGenericFields;
 
 /**
  * Integration test for fields annotated with {@code @Mock} and with generic parameters.

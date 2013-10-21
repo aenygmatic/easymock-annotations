@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2013 Balazs Berkes.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +15,10 @@
  */
 package integrationtest;
 
-import org.easymock.annotation.Mock;
-
 import integrationtest.support.FirstLevelClass;
 import integrationtest.support.SecondLevelClassA;
+
+import org.easymock.annotation.Mock;
 
 /**
  * Integration test for {@link EasyMockAnnotations#initialize(Object)}.

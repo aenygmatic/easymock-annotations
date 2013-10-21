@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2013 Balazs Berkes.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,7 +36,7 @@ public @interface MockControl {
      * Defines the type of mocks created by this control {@link MockType}.
      * Default is {@link MockType#DEFAULT}.
      * <p>
-     * This setup of the {@code @Mock} annotation will be overriden by this setup if created by control.
+     * This setup of the {@code @Mock} annotation will be overridden by this setup if created by control.
      * <p>
      * @return the type of the mock
      */

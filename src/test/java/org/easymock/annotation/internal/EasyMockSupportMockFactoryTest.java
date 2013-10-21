@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2013 Balazs Berkes.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,16 +15,18 @@
  */
 package org.easymock.annotation.internal;
 
+import static org.junit.Assert.assertEquals;
+
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import org.easymock.EasyMockSupport;
 import org.easymock.MockType;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Unit test for {@link EasyMockSupportMockFactory}.

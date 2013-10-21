@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2013 Balazs Berkes.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,12 +15,14 @@
  */
 package integrationtest.annotations;
 
-import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
-import org.easymock.IMocksControl;
+import static org.easymock.EasyMock.expect;
+
 import org.junit.Before;
 import org.junit.Test;
+
+import org.easymock.IMocksControl;
 
 import org.easymock.annotation.EasyMockAnnotations;
 import org.easymock.annotation.Mock;

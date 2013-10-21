@@ -19,13 +19,13 @@ import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Field;
 
+import org.junit.Test;
+
 import org.easymock.IMocksControl;
 import org.easymock.MockType;
 
 import org.easymock.annotation.EasyMockAnnotations;
 import org.easymock.annotation.MockControl;
-
-import org.junit.Test;
 
 /**
  * Integration test for {@link MockControl @MockContol} creation and type parameters.

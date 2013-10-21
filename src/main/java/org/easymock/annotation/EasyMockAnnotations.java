@@ -53,7 +53,7 @@ public class EasyMockAnnotations {
      * annotations. If {@code @MockControl} is presented mocks will be created by the first annotated
      * {@link IMocksControl} or the {@code IMocksControl} with name associated with the
      * {@link Mock#control() @Mock.control()}. If no {@code @MockControl} annotation is presented mocks are created by
-     * EasyMock (equals to {@code EasyMock.createMock(Class)}) or if the testclass is an instance of
+     * EasyMock (equals to {@code EasyMock.createMock(Class)}) or if the test class is an instance of
      * {@link EasyMockSupport} (equals to {@code createMock(class)}).
      * Initialize all field annotated with {@link Mock @Mock}.
      * <p>
@@ -68,7 +68,7 @@ public class EasyMockAnnotations {
      *     }
      * </pre>
      *
-     * @param testClass the testclass
+     * @param testClass the test class
      */
     public static void initialize(Object testClass) {
         assertNotNull(testClass, "Test class cannot be null!");

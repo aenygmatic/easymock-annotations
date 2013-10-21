@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright 2013 Balazs Berkes.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,8 +19,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.easymock.TestSubject;
 import org.junit.Test;
+
+import org.easymock.TestSubject;
 
 import org.easymock.annotation.EasyMockAnnotations;
 

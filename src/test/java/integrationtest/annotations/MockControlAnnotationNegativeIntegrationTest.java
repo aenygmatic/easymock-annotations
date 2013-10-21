@@ -15,10 +15,10 @@
  */
 package integrationtest.annotations;
 
+import org.junit.Test;
+
 import org.easymock.annotation.EasyMockAnnotations;
 import org.easymock.annotation.MockControl;
-
-import org.junit.Test;
 
 /**
  * Integration test for exception type when {@link MockControl @MockContol} annotation is placed on incorrect type of
