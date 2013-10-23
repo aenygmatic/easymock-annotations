@@ -54,7 +54,7 @@ public class EasyMockAnnotations {
      * {@link IMocksControl} or the {@code IMocksControl} with name associated with the
      * {@link Mock#control() @Mock.control()}. If no {@code @MockControl} annotation is presented mocks are created by
      * EasyMock (equals to {@code EasyMock.createMock(Class)}) or if the test class is an instance of
-     * {@link EasyMockSupport} (equals to {@code createMock(class)}).
+     * {@link org.easymock.EasyMockSupport EasyMockSupport} (equals to {@code createMock(class)}).
      * Initialize all field annotated with {@link Mock @Mock}.
      * <p>
      * All the mocks are injected to field annotated with {@link Injected @Injected}. When the
