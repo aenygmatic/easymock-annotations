@@ -23,7 +23,7 @@ import static org.mockannotations.utils.MockAnnotationValidationUtils.isNull;
 import static org.mockannotations.utils.MockAnnotationValidationUtils.notNull;
 
 import java.lang.reflect.Field;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -85,7 +85,7 @@ public class EasyMockAnnotations {
         private final NavigableMap<String, IMocksControl> namedControls = new TreeMap<String, IMocksControl>();
         private final IMockControlFactory controlFactory = IMockControlFactory.getSingleton();
         private final ClassInitializer classInitializer = new ClassInitializer();
-        private final List<MockHolder> mocks = new LinkedList<MockHolder>();
+        private final List<MockHolder> mocks = new ArrayList<MockHolder>();
         private final MockInjector mockInjector = new MockInjector(mocks);
 
         private FallbackMockHolderFactory fallbackFactory;

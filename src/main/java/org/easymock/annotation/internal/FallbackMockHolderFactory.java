@@ -19,8 +19,8 @@ import static org.mockannotations.utils.MockAnnotationValidationUtils.isEmpty;
 import static org.mockannotations.utils.MockAnnotationValidationUtils.isNull;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -38,7 +38,7 @@ import org.easymock.MockType;
  */
 public class FallbackMockHolderFactory {
 
-    private List<FallbackFactory> factories = new LinkedList<FallbackFactory>();
+    private List<FallbackFactory> factories = new ArrayList<FallbackFactory>();
 
     public FallbackMockHolderFactory(NavigableMap<String, IMocksControl> namedContols, Object testClass) {
         if (!namedContols.isEmpty()) {
