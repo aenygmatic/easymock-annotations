@@ -31,6 +31,7 @@ import java.util.TreeMap;
 import org.mockannotations.ClassInitializer;
 import org.mockannotations.MockHolder;
 import org.mockannotations.MockInjector;
+import org.mockannotations.SetterMockInjector;
 import org.mockannotations.utils.AnnotationScanner;
 
 import org.easymock.IMocksControl;
@@ -87,6 +88,7 @@ public class EasyMockAnnotations {
         private final ClassInitializer classInitializer = new ClassInitializer();
         private final List<MockHolder> mocks = new ArrayList<MockHolder>();
         private final MockInjector mockInjector = new MockInjector(mocks);
+        private final SetterMockInjector setterMockInjector = new SetterMockInjector(mocks);
 
         private FallbackMockHolderFactory fallbackFactory;
         private Object testClass;
@@ -138,6 +140,7 @@ public class EasyMockAnnotations {
             for (Field field : getAllDeclaredFields(testClass.getClass())) {
                 if (field.isAnnotationPresent(Injected.class) || field.isAnnotationPresent(TestSubject.class)) {
                     Object testedClass = createInstanceIfNull(field);
+                    setterMockInjector.injectTo(testedClass);
                     mockInjector.injectTo(testedClass);
                 }
             }
